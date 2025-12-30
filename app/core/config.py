@@ -1,0 +1,17 @@
+from typing import List, Union
+from pydantic import AnyHttpUrl, validator
+from pydantic_settings import BaseSettings
+
+class Settings(BaseSettings):
+    PROJECT_NAME: str = "PolicyPulse"
+    API_V1_STR: str = "/api/v1"
+    SECRET_KEY: str = "DEFAULT_SECRET_KEY"
+    ACCESS_TOKEN_EXPIRE_MINUTES: int = 60 * 24 * 8  # 8 days
+    SQLALCHEMY_DATABASE_URL: str = "sqlite:///./sql_app.db"
+    OPENAI_API_KEY: str = ""
+
+    class Config:
+        env_file = ".env"
+        case_sensitive = True
+
+settings = Settings()
