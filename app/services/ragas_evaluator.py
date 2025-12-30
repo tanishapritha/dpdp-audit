@@ -1,3 +1,4 @@
+from typing import List, Dict
 from ragas import evaluate
 from ragas.metrics import faithfulness, answer_relevancy
 from datasets import Dataset
@@ -42,6 +43,7 @@ class RagasEvaluator:
         
         # Note: RAGAS needs an OpenAI API key in environment
         os.environ["OPENAI_API_KEY"] = settings.OPENAI_API_KEY
+        os.environ["OPENAI_API_BASE"] = settings.OPENAI_API_BASE
         
         try:
             # We use a subset of metrics for MVP

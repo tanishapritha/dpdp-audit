@@ -5,7 +5,10 @@ from typing import List, Dict
 
 class LLMService:
     def __init__(self):
-        self.client = AsyncOpenAI(api_key=settings.OPENAI_API_KEY)
+        self.client = AsyncOpenAI(
+            api_key=settings.OPENAI_API_KEY,
+            base_url=settings.OPENAI_API_BASE
+        )
 
     async def verify_requirement(self, requirement_text: str, clauses: List[Dict]) -> Dict:
         """
