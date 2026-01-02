@@ -1,113 +1,102 @@
 import json
+import logging
+from typing import List, Dict, Any, Optional
 from openai import AsyncOpenAI
 from app.core.config import settings
-from typing import List, Dict
+
+logger = logging.getLogger(__name__)
 
 class LLMService:
     def __init__(self):
+        # OpenRouter requires specific headers for better discoverability
         self.client = AsyncOpenAI(
             api_key=settings.OPENAI_API_KEY,
-            base_url=settings.OPENAI_API_BASE
+            base_url=settings.OPENAI_API_BASE,
+            default_headers={
+                "HTTP-Referer": "https://policypulse.ai",
+                "X-Title": "PolicyPulse Compliance Engine",
+            }
         )
+        # Default to a high-performance model available on OpenRouter
+        self.model = "openai/gpt-4o-mini" 
 
-    async def verify_requirement(self, requirement_text: str, clauses: List[Dict]) -> Dict:
+    async def verify_requirement(self, requirement_text: str, clauses: List[Dict[str, Any]]) -> Dict[str, Any]:
         """
-        Calls the LLM to verify a requirement against a set of clauses.
+        Verify a statutory requirement against a candidate set of policy clauses.
         """
         system_prompt = (
-            "You are a legal compliance verification system.\n\n"
-            "Your task is to verify whether specific statutory requirements are\n"
-            "explicitly stated in the provided text.\n\n"
-            "You must not infer intent, interpret vague language, or assume compliance.\n"
-            "If a requirement is not explicitly stated, it must be marked as NOT_COVERED.\n\n"
-            "You must return output strictly in valid JSON according to the provided schema.\n"
-            "Do not include explanations outside the schema.\n"
-            "Temperature = 0."
+            "You are a specialized legal compliance auditor. Your objective is to verify "
+            "if specific regulatory requirements from the Digital Personal Data Protection Act (DPDP), 2023 "
+            "are explicitly addressed in the provided segments of a privacy policy.\n\n"
+            "Constraints:\n"
+            "1. Strict Adherence: Only mark as COVERED if the requirement is explicitly stated.\n"
+            "2. Evidence: You must provide a verbatim quote from the text.\n"
+            "3. Determinism: Return a structured JSON response only.\n"
+            "4. Classification: Use COVERED, PARTIAL, or NOT_COVERED."
         )
 
         user_prompt = (
-            "You are verifying compliance with the Digital Personal Data Protection Act, 2023.\n\n"
-            f"Requirement:\n{requirement_text}\n\n"
-            "Task:\nReview the provided clauses and determine whether this requirement is\n"
-            "explicitly satisfied.\n\n"
-            "Rules:\n"
-            "- Do not infer compliance.\n"
-            "- Do not rely on implied meaning.\n"
-            "- If language is vague or incomplete, mark PARTIAL.\n"
-            "- If missing, mark NOT_COVERED.\n"
-            "- Evidence must be a direct quote.\n\n"
-            "Return JSON only.\n\n"
-            "Schema:\n"
+            f"Statutory Requirement:\n{requirement_text}\n\n"
+            f"Policy Segments for Review:\n{json.dumps(clauses, indent=2)}\n\n"
+            "Output Schema:\n"
             "{\n"
             "  \"status\": \"COVERED | PARTIAL | NOT_COVERED\",\n"
-            "  \"confidence\": number,\n"
-            "  \"evidence\": {\n"
-            "    \"page\": number | null,\n"
-            "    \"clause_id\": string | null,\n"
-            "    \"quote\": string | null\n"
-            "  },\n"
-            "  \"reason\": string\n"
-            "}\n\n"
-            f"Clauses:\n{json.dumps(clauses, indent=2)}"
+            "  \"confidence\": 0.0-1.0,\n"
+            "  \"evidence\": {\"page\": int, \"clause_id\": \"string\", \"quote\": \"string\"},\n"
+            "  \"reason\": \"Detailed analytical justification\"\n"
+            "}"
         )
 
         try:
             response = await self.client.chat.completions.create(
-                model="gpt-4o", # Or gpt-3.5-turbo/gpt-4-turbo as per availability
+                model=self.model,
                 messages=[
                     {"role": "system", "content": system_prompt},
                     {"role": "user", "content": user_prompt}
                 ],
                 response_format={"type": "json_object"},
-                temperature=0
+                temperature=0.0
             )
             return json.loads(response.choices[0].message.content)
         except Exception as e:
-            # Fallback for errors
+            logger.error(f"LLM verification failed: {str(e)}")
             return {
                 "status": "NOT_COVERED",
                 "confidence": 0,
                 "evidence": {"page": None, "clause_id": None, "quote": None},
-                "reason": f"LLM Error: {str(e)}"
+                "reason": f"System error during analysis: {str(e)}"
             }
 
-    async def extract_clauses_with_llm(self, text: str) -> List[Dict]:
+    async def extract_clauses_with_llm(self, text: str) -> List[Dict[str, Any]]:
         """
-        Optionally use LLM for better clause extraction if requested by spec.
-        Spec says in Section 11: Clause Extraction Prompt.
+        Decomposes raw policy text into structured, addressable clauses.
         """
-        system_prompt = "You are a legal compliance verification system."
+        system_prompt = "You are an expert legal document parser."
         user_prompt = (
-            "Extract all clauses from the following policy text.\n\n"
-            "Rules:\n"
-            "- Preserve clause numbering if present.\n"
-            "- Preserve page numbers if present.\n"
-            "- Do not summarize, rewrite, or interpret.\n\n"
-            "Return a JSON array only.\n\n"
-            "Schema:\n"
-            "[\n"
-            "  {\n"
-            "    \"page\": number,\n"
-            "    \"clause_id\": string,\n"
-            "    \"text\": string\n"
-            "  }\n"
-            "]\n\n"
-            f"Policy Text:\n{text}"
+            "Analyze the following privacy policy text and extract individual clauses.\n"
+            "Maintain the original structure and context.\n\n"
+            "Text:\n"
+            f"{text[:10000]}\n\n" # Truncate for safety in MVP context
+            "Return JSON array of objects: {\"page\": int, \"clause_id\": string, \"text\": string}"
         )
 
         try:
             response = await self.client.chat.completions.create(
-                model="gpt-4o",
+                model=self.model,
                 messages=[
                     {"role": "system", "content": system_prompt},
                     {"role": "user", "content": user_prompt}
                 ],
-                response_format={"type": "json_object"}, # Wait, schema says it returns an array. OpenAI json_object usually needs an object.
-                temperature=0
+                response_format={"type": "json_object"},
+                temperature=0.0
             )
-            data = json.loads(response.choices[0].message.content)
-            if isinstance(data, dict) and "clauses" in data:
-                return data["clauses"]
-            return data if isinstance(data, list) else []
-        except Exception:
+            content = json.loads(response.choices[0].message.content)
+            # Handle both list and object-wrapped list responses
+            if isinstance(content, dict):
+                for key in ["clauses", "data", "segments"]:
+                    if key in content and isinstance(content[key], list):
+                        return content[key]
+            return content if isinstance(content, list) else []
+        except Exception as e:
+            logger.error(f"Clause extraction failed: {str(e)}")
             return []
