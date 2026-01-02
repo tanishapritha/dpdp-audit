@@ -1,61 +1,79 @@
-from typing import List, Dict
+import os
+import logging
+import pandas as pd
+from typing import List, Dict, Any, Optional
+from datasets import Dataset
 from ragas import evaluate
 from ragas.metrics import faithfulness, answer_relevancy
-from datasets import Dataset
-import pandas as pd
-import os
 from app.core.config import settings
 
+logger = logging.getLogger(__name__)
+
 class RagasEvaluator:
+    """
+    Automated quality assurance service using RAGAS for evaluating RAG pipeline performance.
+    """
+    
     @staticmethod
-    async def evaluate_compliance(results: List[Dict], all_clauses: List[Dict]) -> Dict:
+    async def evaluate_compliance(results: List[Dict[str, Any]], all_clauses: List[Dict[str, Any]]) -> Dict[str, float]:
         """
-        Evaluates the compliance results using Ragas.
+        Executes a RAGAS evaluation on the generated compliance report.
         """
-        data = {
+        # Requirements map for context alignment
+        from app.services.compliance_engine import DPDP_REQUIREMENTS
+        req_mapping = {r["id"]: r["description"] for r in DPDP_REQUIREMENTS}
+
+        evaluation_data = {
             "question": [],
             "answer": [],
             "contexts": [],
-            "ground_truths": [] # Optional, maybe we don't have it
         }
 
-        # DPDP Requirements for mapping
-        from app.services.compliance_engine import DPDP_REQUIREMENTS
-        req_map = {r["id"]: r["description"] for r in DPDP_REQUIREMENTS}
-
-        for res in results:
-            req_id = res["requirement_id"]
-            question = req_map.get(req_id, "")
-            answer = f"Status: {res['status']}. Reason: {res['reason']}. Evidence: {', '.join(res['evidence'])}"
+        for entry in results:
+            req_id = entry.get("requirement_id")
+            question = req_mapping.get(req_id, "Unknown Requirement")
             
-            # Find the actual clauses used as evidence or filtered
-            # For simplicity in MVP, we might just pass the evidence as context or 
-            # the subset of clauses filtered for this requirement.
-            # But here we need to map back to the actual text.
-            contexts = res['evidence'] if res['evidence'] else ["No evidence provided."]
+            # Construct formatted 'answer' for evaluation
+            answer = (
+                f"Compliance Status: {entry.get('status')}. "
+                f"Justification: {entry.get('reason')} "
+                f"Evidence: {', '.join(entry.get('evidence', []))}"
+            )
             
-            data["question"].append(question)
-            data["answer"].append(answer)
-            data["contexts"].append(contexts)
-            # data["ground_truths"].append([question]) # Dummy ground truth if needed
+            # Use provided evidence as the retrieved context
+            contexts = entry.get("evidence", [])
+            if not contexts:
+                contexts = ["No evidence retrieved from document."]
 
-        dataset = Dataset.from_dict(data)
-        
-        # Note: RAGAS needs an OpenAI API key in environment
-        os.environ["OPENAI_API_KEY"] = settings.OPENAI_API_KEY
-        os.environ["OPENAI_API_BASE"] = settings.OPENAI_API_BASE
-        
+            evaluation_data["question"].append(question)
+            evaluation_data["answer"].append(answer)
+            evaluation_data["contexts"].append(contexts)
+
+        if not evaluation_data["question"]:
+            logger.warning("No data available for RAGAS evaluation.")
+            return {"faithfulness": 0.0, "answer_relevancy": 0.0}
+
         try:
-            # We use a subset of metrics for MVP
-            result = evaluate(
-                dataset,
+            # Prepare dataset for RAGAS
+            ds = Dataset.from_dict(evaluation_data)
+            
+            # Ensure API environment is prepared (OpenRouter/OpenAI)
+            os.environ["OPENAI_API_KEY"] = settings.OPENAI_API_KEY
+            os.environ["OPENAI_API_BASE"] = settings.OPENAI_API_BASE
+
+            # Execute RAGAS evaluation
+            evaluation_result = evaluate(
+                ds,
                 metrics=[faithfulness, answer_relevancy],
             )
+            
             return {
-                "faithfulness": result.get("faithfulness", 0.0),
-                "answer_relevancy": result.get("answer_relevancy", 0.0)
+                "faithfulness": float(evaluation_result.get("faithfulness", 0.0)),
+                "answer_relevancy": float(evaluation_result.get("answer_relevancy", 0.0))
             }
-        except Exception:
+            
+        except Exception as e:
+            logger.error(f"RAGAS evaluation pipeline failed: {str(e)}")
             return {
                 "faithfulness": 0.0,
                 "answer_relevancy": 0.0
