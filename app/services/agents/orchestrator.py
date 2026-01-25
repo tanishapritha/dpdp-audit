@@ -5,6 +5,7 @@ from openai import AsyncOpenAI
 from sqlalchemy.orm import Session
 
 from app.core.config import settings
+from app.core.observability import LatencyTracker, ExecutionTracer
 from app.models.compliance import ComplianceRequirement
 from app.schemas.agents import RequirementAssessment, AgentOrchestrationResult
 from app.services.agents.core_agents import PlannerAgent, ReasonerAgent, VerifierAgent
@@ -32,13 +33,15 @@ class AgentOrchestrator:
         self.reasoner = ReasonerAgent(self.client)
         self.verifier = VerifierAgent(self.client)
         self.retriever = EvidenceRetriever()
+        self.latency_tracker = LatencyTracker()
+        self.tracer = ExecutionTracer()
 
     async def evaluate_policy(
         self, 
         document_clauses: List[Dict[str, Any]]
     ) -> AgentOrchestrationResult:
         """
-        Main orchestration method.
+        Main orchestration method with observability.
         
         Pipeline:
         1. Load requirements from DB (source of truth)
@@ -51,13 +54,15 @@ class AgentOrchestrator:
         """
         
         # Step 1: Load requirements from database
-        requirements = self._load_requirements()
-        if not requirements:
-            raise RuntimeError("No compliance requirements found in database")
+        with self.latency_tracker.measure("load_requirements"):
+            requirements = self._load_requirements()
+            if not requirements:
+                raise RuntimeError("No compliance requirements found in database")
         
         # Step 2: Plan evaluation
-        plan = await self.planner.plan(requirements)
-        logger.info(f"Planner selected {len(plan.requirement_ids)} requirements")
+        with self.latency_tracker.measure("planner_agent"):
+            plan = await self.planner.plan(requirements)
+            logger.info(f"Planner selected {len(plan.requirement_ids)} requirements")
         
         # Validate all requirement_ids exist in database
         valid_ids = {r["requirement_id"] for r in requirements}
@@ -73,32 +78,59 @@ class AgentOrchestrator:
             if not req_data:
                 continue
             
-            # 3a. Retrieve evidence
-            evidence = self.retriever.retrieve(
-                requirement_id=req_id,
-                requirement_keywords=req_data.get("keywords", []),
-                document_clauses=document_clauses
-            )
-            
-            # 3b. Reason about compliance
-            assessment = await self.reasoner.assess(
-                requirement_text=req_data["requirement_text"],
-                evidence=evidence
-            )
-            
-            # 3c. Verify reasoning
-            verification = await self.verifier.verify(assessment, evidence)
-            
-            # Use verified assessment
-            if not verification.approved:
-                logger.info(f"Assessment for {req_id} was downgraded: {verification.verification_notes}")
-                assessment.status = verification.verified_status
-                assessment.confidence = verification.verified_confidence
-            
-            assessments.append(assessment)
+            try:
+                # 3a. Retrieve evidence
+                with self.latency_tracker.measure(f"retrieval_{req_id}"):
+                    evidence = self.retriever.retrieve(
+                        requirement_id=req_id,
+                        requirement_keywords=req_data.get("keywords", []),
+                        document_clauses=document_clauses
+                    )
+                
+                # 3b. Reason about compliance
+                with self.latency_tracker.measure(f"reasoner_{req_id}"):
+                    assessment = await self.reasoner.assess(
+                        requirement_text=req_data["requirement_text"],
+                        evidence=evidence
+                    )
+                
+                # 3c. Verify reasoning
+                with self.latency_tracker.measure(f"verifier_{req_id}"):
+                    verification = await self.verifier.verify(assessment, evidence)
+                
+                # Record trace
+                self.tracer.record_requirement_evaluation(
+                    requirement_id=req_id,
+                    evidence=evidence.model_dump(),
+                    assessment=assessment.model_dump(),
+                    verification=verification.model_dump()
+                )
+                
+                # Use verified assessment
+                if not verification.approved:
+                    logger.info(f"Assessment for {req_id} was downgraded: {verification.verification_notes}")
+                    assessment.status = verification.verified_status
+                    assessment.confidence = verification.verified_confidence
+                
+                assessments.append(assessment)
+                
+            except Exception as e:
+                logger.error(f"Failed to evaluate {req_id}: {str(e)}")
+                # Add UNKNOWN assessment on failure
+                assessments.append(RequirementAssessment(
+                    requirement_id=req_id,
+                    status="UNKNOWN",
+                    confidence=0.0,
+                    evidence_quote=None,
+                    reasoning=f"Evaluation failed: {str(e)}",
+                    page_numbers=[]
+                ))
         
         # Step 4: Deterministic verdict aggregation
         overall_verdict = self._aggregate_verdict(assessments)
+        
+        # Capture final metrics
+        total_latency = sum(self.latency_tracker.get_all_measurements().values())
         
         return AgentOrchestrationResult(
             assessments=assessments,
@@ -107,7 +139,10 @@ class AgentOrchestrator:
                 "evaluated_at": datetime.utcnow().isoformat(),
                 "total_requirements": len(requirements),
                 "evaluated_requirements": len(assessments),
-                "agent_version": "2.0"
+                "agent_version": "2.0",
+                "total_latency_ms": total_latency,
+                "latencies": self.latency_tracker.get_all_measurements(),
+                "execution_trace": self.tracer.get_full_trace()
             }
         )
 
