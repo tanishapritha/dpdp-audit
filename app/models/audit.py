@@ -1,4 +1,5 @@
-from sqlalchemy import Column, String, Integer, ForeignKey, Float, JSON, DateTime
+from sqlalchemy import Column, String, Integer, ForeignKey, Float, DateTime
+from sqlalchemy.dialects.postgresql import UUID, JSONB
 from sqlalchemy.orm import relationship
 from app.core.database import Base
 import enum
@@ -15,15 +16,15 @@ class AuditStatus(str, enum.Enum):
 class PolicyAudit(Base):
     __tablename__ = "policy_audits"
 
-    id = Column(String, primary_key=True, default=lambda: str(uuid.uuid4()))
+    id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
     filename = Column(String)
     status = Column(String, default=AuditStatus.PENDING)
     progress = Column(Float, default=0.0)
-    owner_id = Column(Integer, ForeignKey("users.id"))
+    owner_id = Column(UUID(as_uuid=True), ForeignKey("users.id"))
     created_at = Column(DateTime, default=datetime.utcnow)
     
-    # Store the final report as JSON
-    report = Column(JSON, nullable=True)
+    # Store the final report as JSONB
+    report = Column(JSONB, nullable=True)
     
     # RAGAS metrics for quick access if needed, though they are in the report JSON too
     ragas_faithfulness = Column(Float, nullable=True)

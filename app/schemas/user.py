@@ -1,5 +1,6 @@
 from typing import Optional
 from pydantic import BaseModel, EmailStr
+from uuid import UUID
 
 class UserBase(BaseModel):
     email: Optional[EmailStr] = None
@@ -13,7 +14,7 @@ class UserUpdate(UserBase):
     password: Optional[str] = None
 
 class UserInDBBase(UserBase):
-    id: Optional[int] = None
+    id: Optional[UUID] = None
 
     class Config:
         from_attributes = True
@@ -26,4 +27,4 @@ class Token(BaseModel):
     token_type: str
 
 class TokenPayload(BaseModel):
-    sub: Optional[int] = None
+    sub: Optional[UUID] = None

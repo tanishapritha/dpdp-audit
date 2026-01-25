@@ -1,0 +1,546 @@
+[
+  {
+    "clause_id": "DPDP_S1_1",
+    "section_ref": "Section 1",
+    "subsection_ref": "1",
+    "title": "Short title and commencement",
+    "text": "This Act may be called the Digital Personal Data Protection Act, 2023.",
+    "page_hint": "PAGE 1"
+  },
+  {
+    "clause_id": "DPDP_S1_2",
+    "section_ref": "Section 1",
+    "subsection_ref": "2",
+    "title": "Short title and commencement",
+    "text": "It shall come into force on such date as the Central Government may, by notification in the Official Gazette, appoint and different dates may be appointed for different provisions of this Act and any reference in any such provision to the commencement of this Act shall be construed as a reference to the coming into force of that provision.",
+    "page_hint": "PAGE 1"
+  },
+  {
+    "clause_id": "DPDP_S2_1",
+    "section_ref": "Section 2",
+    "subsection_ref": "1",
+    "title": "Definitions",
+    "text": "In this Act, unless the context otherwise requires,—",
+    "page_hint": "PAGE 2"
+  },
+  {
+    "clause_id": "DPDP_S4_1",
+    "section_ref": "Section 4",
+    "subsection_ref": "1",
+    "title": "Grounds for processing personal data",
+    "text": "A person may process the personal data of a Data Principal only in accordance with the provisions of this Act and for a lawful purpose,—",
+    "page_hint": "PAGE 4"
+  },
+  {
+    "clause_id": "DPDP_S4_2",
+    "section_ref": "Section 4",
+    "subsection_ref": "2",
+    "title": "Grounds for processing personal data",
+    "text": "For the purposes of this section, the expression “lawful purpose” means any purpose which is not expressly forbidden by law.",
+    "page_hint": "PAGE 4"
+  },
+  {
+    "clause_id": "DPDP_S5_1",
+    "section_ref": "Section 5",
+    "subsection_ref": "1",
+    "title": "Notice",
+    "text": "Every request made to a Data Principal under section 6 for consent shall be accompanied or preceded by a notice given by the Data Fiduciary to the Data Principal, informing her,—",
+    "page_hint": "PAGE 4"
+  },
+  {
+    "clause_id": "DPDP_S5_2",
+    "section_ref": "Section 5",
+    "subsection_ref": "2",
+    "title": "Notice",
+    "text": "Where a Data Principal has given her consent for the processing of her personal data before the date of commencement of this Act,—",
+    "page_hint": "PAGE 5"
+  },
+  {
+    "clause_id": "DPDP_S6_1",
+    "section_ref": "Section 6",
+    "subsection_ref": "1",
+    "title": "Consent",
+    "text": "The consent given by the Data Principal shall be free, specific, informed, unconditional and unambiguous with a clear affirmative action, and shall signify an agreement to the processing of her personal data for the specified purpose and be limited to such personal data as is necessary for such specified purpose.",
+    "page_hint": "PAGE 6"
+  },
+  {
+    "clause_id": "DPDP_S6_2",
+    "section_ref": "Section 6",
+    "subsection_ref": "2",
+    "title": "Consent",
+    "text": "Any part of consent referred in sub-section (1) which constitutes an infringement of the provisions of this Act or the rules made thereunder or any other law for the time being in force shall be invalid to the extent of such infringement.",
+    "page_hint": "PAGE 6"
+  },
+  {
+    "clause_id": "DPDP_S6_3",
+    "section_ref": "Section 6",
+    "subsection_ref": "3",
+    "title": "Consent",
+    "text": "Every request for consent under the provisions of this Act or the rules made thereunder shall be presented to the Data Principal in a clear and plain language, giving her the option to access such request in English or any language specified in the Eighth Schedule to the Constitution and providing the contact details of a Data Protection Officer, where applicable, or of any other person authorised by the Data Fiduciary to respond to any communication from the Data Principal for the purpose of exercise of her rights under the provisions of this Act.",
+    "page_hint": "PAGE 6"
+  },
+  {
+    "clause_id": "DPDP_S6_4",
+    "section_ref": "Section 6",
+    "subsection_ref": "4",
+    "title": "Consent",
+    "text": "Where consent given by the Data Principal is the basis of processing of personal data, such Data Principal shall have the right to withdraw her consent at any time, with the ease of doing so being comparable to the ease with which such consent was given.",
+    "page_hint": "PAGE 6"
+  },
+  {
+    "clause_id": "DPDP_S6_5",
+    "section_ref": "Section 6",
+    "subsection_ref": "5",
+    "title": "Consent",
+    "text": "The consequences of the withdrawal referred to in sub-section (4) shall be borne by the Data Principal, and such withdrawal shall not affect the legality of processing of the personal data based on consent before its withdrawal.",
+    "page_hint": "PAGE 6"
+  },
+  {
+    "clause_id": "DPDP_S6_6",
+    "section_ref": "Section 6",
+    "subsection_ref": "6",
+    "title": "Consent",
+    "text": "If a Data Principal withdraws her consent to the processing of personal data under sub-section (5), the Data Fiduciary shall, within a reasonable time, cease and cause its Data Processors to cease processing the personal data of such Data Principal unless such processing without her consent is required or authorised under the provisions of this Act or the rules made thereunder or any other law for the time being in force in India.",
+    "page_hint": "PAGE 6"
+  },
+  {
+    "clause_id": "DPDP_S6_7",
+    "section_ref": "Section 6",
+    "subsection_ref": "7",
+    "title": "Consent",
+    "text": "The Data Principal may give, manage, review or withdraw her consent to the Data Fiduciary through a Consent Manager.",
+    "page_hint": "PAGE 6"
+  },
+  {
+    "clause_id": "DPDP_S6_8",
+    "section_ref": "Section 6",
+    "subsection_ref": "8",
+    "title": "Consent",
+    "text": "The Consent Manager shall be accountable to the Data Principal and shall act on her behalf in such manner and subject to such obligations as may be prescribed.",
+    "page_hint": "PAGE 6"
+  },
+  {
+    "clause_id": "DPDP_S6_9",
+    "section_ref": "Section 6",
+    "subsection_ref": "9",
+    "title": "Consent",
+    "text": "Every Consent Manager shall be registered with the Board in such manner and subject to such technical, operational, financial and other conditions as may be prescribed.",
+    "page_hint": "PAGE 6"
+  },
+  {
+    "clause_id": "DPDP_S6_10",
+    "section_ref": "Section 6",
+    "subsection_ref": "10",
+    "title": "Consent",
+    "text": "Where a consent given by the Data Principal is the basis of processing of personal data and a question arises in this regard in a proceeding, the Data Fiduciary shall be obliged to prove that a notice was given by her to the Data Principal and consent was given by such Data Principal to the Data Fiduciary in accordance with the provisions of this Act and the rules made thereunder.",
+    "page_hint": "PAGE 6"
+  },
+  {
+    "clause_id": "DPDP_S7_1",
+    "section_ref": "Section 7",
+    "subsection_ref": "1",
+    "title": "Certain legitimate uses",
+    "text": "A Data Fiduciary may process personal data of a Data Principal for any of following legitimate uses.",
+    "page_hint": "PAGE 7"
+  },
+  {
+    "clause_id": "DPDP_S8_1",
+    "section_ref": "Section 8",
+    "subsection_ref": "1",
+    "title": "General obligations of Data Fiduciary",
+    "text": "A Data Fiduciary shall, irrespective of any agreement to the contrary or failure of a Data Principal to carry out the duties provided under this Act, be responsible for complying with the provisions of this Act and the rules made thereunder in respect of any processing undertaken by it or on its behalf by a Data Processor.",
+    "page_hint": "PAGE 7"
+  },
+  {
+    "clause_id": "DPDP_S8_2",
+    "section_ref": "Section 8",
+    "subsection_ref": "2",
+    "title": "General obligations of Data Fiduciary",
+    "text": "A Data Fiduciary may engage, appoint, use or otherwise involve a Data Processor to process personal data on its behalf for any activity related to offering of goods or services to Data Principals only under a valid contract.",
+    "page_hint": "PAGE 7"
+  },
+  {
+    "clause_id": "DPDP_S8_3",
+    "section_ref": "Section 8",
+    "subsection_ref": "3",
+    "title": "General obligations of Data Fiduciary",
+    "text": "Where personal data processed by a Data Fiduciary is likely to be—",
+    "page_hint": "PAGE 7"
+  },
+  {
+    "clause_id": "DPDP_S8_4",
+    "section_ref": "Section 8",
+    "subsection_ref": "4",
+    "title": "General obligations of Data Fiduciary",
+    "text": "A Data Fiduciary shall implement appropriate technical and organisational measures to ensure effective observance of the provisions of this Act and the rules made thereunder.",
+    "page_hint": "PAGE 7"
+  },
+  {
+    "clause_id": "DPDP_S8_5",
+    "section_ref": "Section 8",
+    "subsection_ref": "5",
+    "title": "General obligations of Data Fiduciary",
+    "text": "A Data Fiduciary shall protect personal data in its possession or under its control, including in respect of any processing undertaken by it or on its behalf by a Data Processor, by taking reasonable security safeguards to prevent personal data breach.",
+    "page_hint": "PAGE 7"
+  },
+  {
+    "clause_id": "DPDP_S8_6",
+    "section_ref": "Section 8",
+    "subsection_ref": "6",
+    "title": "General obligations of Data Fiduciary",
+    "text": "In the event of a personal data breach, the Data Fiduciary shall give the Board and each affected Data Principal, intimation of such breach in such form and manner as may be prescribed.",
+    "page_hint": "PAGE 7"
+  },
+  {
+    "clause_id": "DPDP_S8_7",
+    "section_ref": "Section 8",
+    "subsection_ref": "7",
+    "title": "General obligations of Data Fiduciary",
+    "text": "A Data Fiduciary shall, unless retention is necessary for compliance with any law for the time being in force,—",
+    "page_hint": "PAGE 8"
+  },
+  {
+    "clause_id": "DPDP_S8_8",
+    "section_ref": "Section 8",
+    "subsection_ref": "8",
+    "title": "General obligations of Data Fiduciary",
+    "text": "The purpose referred to in clause (a) of sub-section (7) shall be deemed to no longer be served, if the Data Principal does not––",
+    "page_hint": "PAGE 8"
+  },
+  {
+    "clause_id": "DPDP_S8_9",
+    "section_ref": "Section 8",
+    "subsection_ref": "9",
+    "title": "General obligations of Data Fiduciary",
+    "text": "A Data Fiduciary shall publish, in such manner as may be prescribed, the business contact information of a Data Protection Officer, if applicable, or a person who is able to answer on behalf of the Data Fiduciary, the questions, if any, raised by the Data Principal about the processing of her personal data.",
+    "page_hint": "PAGE 8"
+  },
+  {
+    "clause_id": "DPDP_S8_10",
+    "section_ref": "Section 8",
+    "subsection_ref": "10",
+    "title": "General obligations of Data Fiduciary",
+    "text": "A Data Fiduciary shall establish an effective mechanism to redress the grievances of Data Principals.",
+    "page_hint": "PAGE 8"
+  },
+  {
+    "clause_id": "DPDP_S9_1",
+    "section_ref": "Section 9",
+    "subsection_ref": "1",
+    "title": "Processing of personal data of children",
+    "text": "The Data Fiduciary shall, before processing any personal data of a child or a person with disability who has a lawful guardian obtain verifiable consent of the parent of such child or the lawful guardian, as the case may be, in such manner as may be prescribed.",
+    "page_hint": "PAGE 8"
+  },
+  {
+    "clause_id": "DPDP_S9_2",
+    "section_ref": "Section 9",
+    "subsection_ref": "2",
+    "title": "Processing of personal data of children",
+    "text": "A Data Fiduciary shall not undertake such processing of personal data that is likely to cause any detrimental effect on the well-being of a child.",
+    "page_hint": "PAGE 8"
+  },
+  {
+    "clause_id": "DPDP_S9_3",
+    "section_ref": "Section 9",
+    "subsection_ref": "3",
+    "title": "Processing of personal data of children",
+    "text": "A Data Fiduciary shall not undertake tracking or behavioural monitoring of children or targeted advertising directed at children.",
+    "page_hint": "PAGE 8"
+  },
+  {
+    "clause_id": "DPDP_S10_1",
+    "section_ref": "Section 10",
+    "subsection_ref": "1",
+    "title": "Additional obligations of Significant Data Fiduciary",
+    "text": "The Significant Data Fiduciary shall—",
+    "page_hint": "PAGE 9"
+  },
+  {
+    "clause_id": "DPDP_S10_2",
+    "section_ref": "Section 10",
+    "subsection_ref": "2",
+    "title": "Additional obligations of Significant Data Fiduciary",
+    "text": "The Significant Data Fiduciary shall—",
+    "page_hint": "PAGE 9"
+  },
+  {
+    "clause_id": "DPDP_S10_3",
+    "section_ref": "Section 10",
+    "subsection_ref": "3",
+    "title": "Additional obligations of Significant Data Fiduciary",
+    "text": "The Significant Data Fiduciary shall—",
+    "page_hint": "PAGE 9"
+  },
+  {
+    "clause_id": "DPDP_S11_1",
+    "section_ref": "Section 11",
+    "subsection_ref": "1",
+    "title": "Right to access information about personal data",
+    "text": "The Data Principal shall have the right to obtain from the Data Fiduciary to whom she has previously given consent, including consent as referred to in clause (a) of section 7 (hereinafter referred to as the said Data Fiduciary), for processing of personal data, upon making to it a request in such manner as may be prescribed,—",
+    "page_hint": "PAGE 10"
+  },
+  {
+    "clause_id": "DPDP_S12_1",
+    "section_ref": "Section 12",
+    "subsection_ref": "1",
+    "title": "Right to correction and erasure of personal data",
+    "text": "A Data Principal shall have the right to correction, completion, updating and erasure of her personal data for the processing of which she has previously given consent, including consent as referred to in clause (a) of section 7, in accordance with any requirement or procedure under any law for the time being in force.",
+    "page_hint": "PAGE 10"
+  },
+  {
+    "clause_id": "DPDP_S13_1",
+    "section_ref": "Section 13",
+    "subsection_ref": "1",
+    "title": "Right of grievance redressal",
+    "text": "A Data Principal shall have the right to have readily available means of grievance redressal provided by a Data Fiduciary or Consent Manager in respect of any act or omission of such Data Fiduciary or Consent Manager regarding the performance of its obligations in relation to the personal data of such Data Principal or the exercise of her rights under the provisions of this Act and the rules made thereunder.",
+    "page_hint": "PAGE 10"
+  },
+  {
+    "clause_id": "DPDP_S14_1",
+    "section_ref": "Section 14",
+    "subsection_ref": "1",
+    "title": "Right to nominate",
+    "text": "A Data Principal shall have the right to nominate, in such manner as may be prescribed, any other individual, who shall, in the event of death or incapacity of the Data Principal, exercise the rights of the Data Principal in accordance with the provisions of this Act and the rules made thereunder.",
+    "page_hint": "PAGE 10"
+  },
+  {
+    "clause_id": "DPDP_S15_1",
+    "section_ref": "Section 15",
+    "subsection_ref": "1",
+    "title": "Duties of Data Principal",
+    "text": "A Data Principal shall perform the following duties, namely:—",
+    "page_hint": "PAGE 11"
+  },
+  {
+    "clause_id": "DPDP_S16_1",
+    "section_ref": "Section 16",
+    "subsection_ref": "1",
+    "title": "Processing of personal data outside India",
+    "text": "The Central Government may, by notification, restrict the transfer of personal data by a Data Fiduciary for processing to such country or territory outside India as may be so notified.",
+    "page_hint": "PAGE 11"
+  },
+  {
+    "clause_id": "DPDP_S17_1",
+    "section_ref": "Section 17",
+    "subsection_ref": "1",
+    "title": "Exemptions",
+    "text": "The provisions of Chapter II, except sub-sections (1) and (5) of section 8, and those of Chapter III and section 16 shall not apply where—",
+    "page_hint": "PAGE 11"
+  },
+  {
+    "clause_id": "DPDP_S18_1",
+    "section_ref": "Section 18",
+    "subsection_ref": "1",
+    "title": "Establishment of Board",
+    "text": "With effect from such date as the Central Government may, by notification, appoint, there shall be established, for the purposes of this Act, a Board to be called the Data Protection Board of India.",
+    "page_hint": "PAGE 12"
+  },
+  {
+    "clause_id": "DPDP_S19_1",
+    "section_ref": "Section 19",
+    "subsection_ref": "1",
+    "title": "Composition of Board",
+    "text": "The Board shall consist of a Chairperson and such number of other Members as the Central Government may notify.",
+    "page_hint": "PAGE 12"
+  },
+  {
+    "clause_id": "DPDP_S20_1",
+    "section_ref": "Section 20",
+    "subsection_ref": "1",
+    "title": "Salary, allowances payable to Chairperson and Members",
+    "text": "The salary, allowances and other terms and conditions of service of the Chairperson and other Members shall be such as may be prescribed, and shall not be varied to their disadvantage after their appointment.",
+    "page_hint": "PAGE 12"
+  },
+  {
+    "clause_id": "DPDP_S21_1",
+    "section_ref": "Section 21",
+    "subsection_ref": "1",
+    "title": "Disqualifications for appointment and continuation",
+    "text": "A person shall be disqualified for being appointed and continued as the Chairperson or a Member, if she—",
+    "page_hint": "PAGE 12"
+  },
+  {
+    "clause_id": "DPDP_S22_1",
+    "section_ref": "Section 22",
+    "subsection_ref": "1",
+    "title": "Resignation by Members and filling of vacancy",
+    "text": "The Chairperson or any other Member may give notice in writing to the Central Government of resigning from her office, and such resignation shall be effective from the date on which the Central Government permits her to relinquish office, or upon expiry of a period of three months from the date of receipt of such notice, or upon a duly appointed successor entering upon her office, or upon the expiry of the term of her office, whichever is earliest.",
+    "page_hint": "PAGE 12"
+  },
+  {
+    "clause_id": "DPDP_S23_1",
+    "section_ref": "Section 23",
+    "subsection_ref": "1",
+    "title": "Proceedings of Board",
+    "text": "The Board shall observe such procedure in regard to the holding of and transaction of business at its meetings, including by digital means, and authenticate its orders, directions and instruments in such manner as may be prescribed.",
+    "page_hint": "PAGE 12"
+  },
+  {
+    "clause_id": "DPDP_S24_1",
+    "section_ref": "Section 24",
+    "subsection_ref": "1",
+    "title": "Officers and employees of Board",
+    "text": "The Board may, with previous approval of the Central Government, appoint such officers and employees as it may deem necessary for the efficient discharge of its functions under the provisions of this Act, on such terms and conditions of appointment and service as may be prescribed.",
+    "page_hint": "PAGE 12"
+  },
+  {
+    "clause_id": "DPDP_S25_1",
+    "section_ref": "Section 25",
+    "subsection_ref": "1",
+    "title": "Members and public servants",
+    "text": "The Chairperson, Members, officers and employees of the Board shall be deemed, when acting or purporting to act in pursuance of provisions of this Act, to be public servants within the meaning of section 21 of the Indian Penal Code.",
+    "page_hint": "PAGE 12"
+  },
+  {
+    "clause_id": "DPDP_S26_1",
+    "section_ref": "Section 26",
+    "subsection_ref": "1",
+    "title": "Powers of Chairperson",
+    "text": "The Chairperson shall exercise the following powers, namely:—",
+    "page_hint": "PAGE 13"
+  },
+  {
+    "clause_id": "DPDP_S27_1",
+    "section_ref": "Section 27",
+    "subsection_ref": "1",
+    "title": "Powers and functions of Board",
+    "text": "The Board shall exercise and perform the following powers and functions,",
+    "page_hint": "PAGE 13"
+  },
+  {
+    "clause_id": "DPDP_S28_1",
+    "section_ref": "Section 28",
+    "subsection_ref": "1",
+    "title": "Procedure to be followed by Board",
+    "text": "The Board shall function as an independent body and shall, as far as practicable, function as a digital office, with the receipt of complaints and the allocation, hearing and pronouncement of decisions in respect of the same being digital by design, and adopt such techno-legal measures as may be prescribed.",
+    "page_hint": "PAGE 14"
+  },
+  {
+    "clause_id": "DPDP_S29_1",
+    "section_ref": "Section 29",
+    "subsection_ref": "1",
+    "title": "Appeal to Appellate Tribunal",
+    "text": "Any person aggrieved by an order or direction made by the Board under this Act may prefer an appeal before the Appellate Tribunal.",
+    "page_hint": "PAGE 15"
+  },
+  {
+    "clause_id": "DPDP_S30_1",
+    "section_ref": "Section 30",
+    "subsection_ref": "1",
+    "title": "Orders passed by Appellate Tribunal to be executable as decree",
+    "text": "An order passed by the Appellate Tribunal under this Act shall be executable by it as a decree of civil court, and for this purpose, the Appellate Tribunal shall have all the powers of a civil court.",
+    "page_hint": "PAGE 15"
+  },
+  {
+    "clause_id": "DPDP_S31_1",
+    "section_ref": "Section 31",
+    "subsection_ref": "1",
+    "title": "Alternate dispute resolution",
+    "text": "If the Board is of the opinion that any complaint may be resolved by mediation, it may direct the parties concerned to attempt resolution of the dispute through such mediation by such mediator as the parties may mutually agree upon, or as provided for under any law for the time being in force in India.",
+    "page_hint": "PAGE 15"
+  },
+  {
+    "clause_id": "DPDP_S32_1",
+    "section_ref": "Section 32",
+    "subsection_ref": "1",
+    "title": "Voluntary undertaking",
+    "text": "The Board may accept a voluntary undertaking in respect of any matter related to observance of the provisions of this Act from any person at any stage of a proceeding under section 28.",
+    "page_hint": "PAGE 15"
+  },
+  {
+    "clause_id": "DPDP_S33_1",
+    "section_ref": "Section 33",
+    "subsection_ref": "1",
+    "title": "Penalties",
+    "text": "If the Board determines on conclusion of an inquiry that breach of the provisions of this Act or the rules made thereunder by a person is significant, it may, after giving the person an opportunity of being heard, impose such monetary penalty specified in the Schedule.",
+    "page_hint": "PAGE 16"
+  },
+  {
+    "clause_id": "DPDP_S34_1",
+    "section_ref": "Section 34",
+    "subsection_ref": "1",
+    "title": "Crediting sums realised by way of penalties to Consolidated Fund of India",
+    "text": "All sums realised by way of penalties imposed by the Board under this Act, shall be credited to the Consolidated Fund of India.",
+    "page_hint": "PAGE 16"
+  },
+  {
+    "clause_id": "DPDP_S35_1",
+    "section_ref": "Section 35",
+    "subsection_ref": "1",
+    "title": "Protection of action taken in good faith",
+    "text": "No suit, prosecution or other legal proceedings shall lie against the Central Government, the Board, its Chairperson and any Member, officer or employee thereof for anything which is done or intended to be done in good faith under the provisions of this Act or the rules made thereunder.",
+    "page_hint": "PAGE 16"
+  },
+  {
+    "clause_id": "DPDP_S36_1",
+    "section_ref": "Section 36",
+    "subsection_ref": "1",
+    "title": "Power to call for information",
+    "text": "The Central Government may, for the purposes of this Act, require the Board and any Data Fiduciary or intermediary to furnish such information as it may call for.",
+    "page_hint": "PAGE 16"
+  },
+  {
+    "clause_id": "DPDP_S37_1",
+    "section_ref": "Section 37",
+    "subsection_ref": "1",
+    "title": "Power of Central Government to issue directions",
+    "text": "The Central Government or any of its officers specially authorised by it in this behalf may, upon receipt of a reference in writing from the Board that—",
+    "page_hint": "PAGE 17"
+  },
+  {
+    "clause_id": "DPDP_S38_1",
+    "section_ref": "Section 38",
+    "subsection_ref": "1",
+    "title": "Consistency with other laws",
+    "text": "The provisions of this Act shall be in addition to and not in derogation of any other law for the time being in force.",
+    "page_hint": "PAGE 17"
+  },
+  {
+    "clause_id": "DPDP_S39_1",
+    "section_ref": "Section 39",
+    "subsection_ref": "1",
+    "title": "Bar of jurisdiction",
+    "text": "No civil court shall have the jurisdiction to entertain any suit or proceeding in respect of any matter for which the Board is empowered under the provisions of this Act and no injunction shall be granted by any court or other authority in respect of any action taken or to be taken in pursuance of any power under the provisions of this Act.",
+    "page_hint": "PAGE 17"
+  },
+  {
+    "clause_id": "DPDP_S40_1",
+    "section_ref": "Section 40",
+    "subsection_ref": "1",
+    "title": "Power to make rules",
+    "text": "The Central Government may, by notification, and subject to the condition of previous publication, make rules not inconsistent with the provisions of this Act, to carry out the purposes of this Act.",
+    "page_hint": "PAGE 18"
+  },
+  {
+    "clause_id": "DPDP_S41_1",
+    "section_ref": "Section 41",
+    "subsection_ref": "1",
+    "title": "Laying of rules and certain notifications",
+    "text": "Every rule made and every notification issued under section 16 and section 42 of this Act shall be laid, as soon as may be after it is made, before each House of Parliament, while it is in session, for a total period of thirty days which may be comprised in one session or in two or more successive sessions, and if before the expiry of the session immediately following the session or the successive sessions aforesaid, both Houses agree in making any modification in the rule or notification or both Houses agree that the rule or notification should not be made or issued, the rule or notification shall thereafter have effect only in such modified form or be of no effect, as the case may be; so, however, that any such modification or annulment shall be without prejudice to the validity of anything previously done under that rule or notification.",
+    "page_hint": "PAGE 18"
+  },
+  {
+    "clause_id": "DPDP_S42_1",
+    "section_ref": "Section 42",
+    "subsection_ref": "1",
+    "title": "Power to amend Schedule",
+    "text": "The Central Government may, by notification, amend the Schedule, subject to the restriction that no such notification shall have the effect of increasing any penalty specified therein to more than twice of what was specified in it when this Act was originally enacted.",
+    "page_hint": "PAGE 18"
+  },
+  {
+    "clause_id": "DPDP_S43_1",
+    "section_ref": "Section 43",
+    "subsection_ref": "1",
+    "title": "Power to remove difficulties",
+    "text": "If any difficulty arises in giving effect to the provisions of this Act, the Central Government may, by order published in the Official Gazette, make such provisions not inconsistent with the provisions of this Act as may appear to it to be necessary or expedient for removing the difficulty.",
+    "page_hint": "PAGE 18"
+  },
+  {
+    "clause_id": "DPDP_S44_1",
+    "section_ref": "Section 44",
+    "subsection_ref": "1",
+    "title": "Amendments to certain Acts",
+    "text": "In section 14 of the Telecom Regulatory Authority of India Act, 1997, in clause (c), for sub-clauses (i) and (ii), the following sub-clauses shall be substituted, namely:—",
+    "page_hint": "PAGE 19"
+  }
+]

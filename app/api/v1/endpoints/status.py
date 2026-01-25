@@ -1,6 +1,7 @@
 from typing import Any
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
+from uuid import UUID
 
 from app.api import deps
 from app.core.database import get_db
@@ -12,7 +13,7 @@ router = APIRouter()
 
 @router.get("/{policy_id}/status", response_model=AuditStatusResponse)
 def get_audit_status(
-    policy_id: str,
+    policy_id: UUID,
     db: Session = Depends(get_db),
     current_user: User = Depends(deps.get_current_user),
 ) -> Any:

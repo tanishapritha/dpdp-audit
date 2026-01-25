@@ -96,7 +96,7 @@ async def upload_policy(
     if not file.filename.endswith(".pdf"):
         raise HTTPException(status_code=400, detail="Only PDF files are supported")
 
-    policy_id = str(uuid.uuid4())
+    policy_id = uuid.uuid4()
     file_path = os.path.join(UPLOAD_DIR, f"{policy_id}_{file.filename}")
 
     with open(file_path, "wb") as buffer:

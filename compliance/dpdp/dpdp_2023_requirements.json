@@ -1,0 +1,107 @@
+{
+  "framework": {
+    "name": "DPDP",
+    "version": "2023",
+    "effective_date": "2023-08-11"
+  },
+  "requirements": [
+    {
+      "requirement_id": "DPDP_6_1",
+      "section_ref": "Section 6(1)",
+      "title": "Valid Consent Before Processing",
+      "requirement_text": "The Data Fiduciary must obtain free, specific, informed, unconditional and unambiguous consent before processing personal data.",
+      "risk_level": "HIGH"
+    },
+    {
+      "requirement_id": "DPDP_8_1",
+      "section_ref": "Section 8(1)",
+      "title": "General Compliance Responsibility",
+      "requirement_text": "A Data Fiduciary must comply with the provisions of this Act and the rules made thereunder in respect of any processing undertaken by it or on its behalf by a Data Processor.",
+      "risk_level": "HIGH"
+    },
+    {
+      "requirement_id": "DPDP_8_4",
+      "section_ref": "Section 8(4)",
+      "title": "Implementation of Measures",
+      "requirement_text": "A Data Fiduciary must implement appropriate technical and organisational measures to ensure effective observance of the provisions of this Act and the rules made thereunder.",
+      "risk_level": "HIGH"
+    },
+    {
+      "requirement_id": "DPDP_8_5",
+      "section_ref": "Section 8(5)",
+      "title": "Protection of Personal Data",
+      "requirement_text": "A Data Fiduciary must protect personal data in its possession or under its control by taking reasonable security safeguards to prevent personal data breach.",
+      "risk_level": "HIGH"
+    },
+    {
+      "requirement_id": "DPDP_8_6",
+      "section_ref": "Section 8(6)",
+      "title": "Notification of Breach",
+      "requirement_text": "A Data Fiduciary must give the Board and each affected Data Principal, intimation of a personal data breach in such form and manner as may be prescribed.",
+      "risk_level": "HIGH"
+    },
+    {
+      "requirement_id": "DPDP_8_7",
+      "section_ref": "Section 8(7)",
+      "title": "Erasure of Personal Data",
+      "requirement_text": "A Data Fiduciary must erase personal data upon the Data Principal withdrawing her consent or as soon as it is reasonable to assume that the specified purpose is no longer being served.",
+      "risk_level": "HIGH"
+    },
+    {
+      "requirement_id": "DPDP_9_1",
+      "section_ref": "Section 9(1)",
+      "title": "Verifiable Consent for Children",
+      "requirement_text": "A Data Fiduciary must obtain verifiable consent of the parent or lawful guardian before processing any personal data of a child.",
+      "risk_level": "HIGH"
+    },
+    {
+      "requirement_id": "DPDP_10_1",
+      "section_ref": "Section 10(1)",
+      "title": "Appointment of Data Protection Officer",
+      "requirement_text": "A Significant Data Fiduciary must appoint a Data Protection Officer who shall represent the Significant Data Fiduciary under the provisions of this Act.",
+      "risk_level": "HIGH"
+    },
+    {
+      "requirement_id": "DPDP_10_2",
+      "section_ref": "Section 10(2)",
+      "title": "Appointment of Independent Data Auditor",
+      "requirement_text": "A Significant Data Fiduciary must appoint an independent data auditor to carry out data audit.",
+      "risk_level": "HIGH"
+    },
+    {
+      "requirement_id": "DPDP_10_3",
+      "section_ref": "Section 10(3)",
+      "title": "Periodic Data Protection Impact Assessment",
+      "requirement_text": "A Significant Data Fiduciary must undertake periodic Data Protection Impact Assessment.",
+      "risk_level": "HIGH"
+    },
+    {
+      "requirement_id": "DPDP_11_1",
+      "section_ref": "Section 11(1)",
+      "title": "Right to Access Information",
+      "requirement_text": "A Data Fiduciary must provide the Data Principal with access to a summary of personal data being processed.",
+      "risk_level": "HIGH"
+    },
+    {
+      "requirement_id": "DPDP_12_1",
+      "section_ref": "Section 12(1)",
+      "title": "Right to Correction and Erasure",
+      "requirement_text": "A Data Fiduciary must correct, complete, or update personal data upon receiving a request from a Data Principal.",
+      "risk_level": "HIGH"
+    },
+    {
+      "requirement_id": "DPDP_13_1",
+      "section_ref": "Section 13(1)",
+      "title": "Grievance Redressal Mechanism",
+      "requirement_text": "A Data Fiduciary must establish an effective mechanism to redress the grievances of Data Principals.",
+      "risk_level": "HIGH"
+    },
+    {
+      "requirement_id": "DPDP_14_1",
+      "section_ref": "Section 14(1)",
+      "title": "Right to Nominate",
+      "requirement_text": "A Data Principal must be allowed to nominate another individual to exercise her rights in the event of her death or incapacity.",
+      "risk_level": "HIGH"
+    }
+  ]
+}
