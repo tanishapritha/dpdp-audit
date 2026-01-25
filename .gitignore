@@ -7,3 +7,4 @@ sql_app.db
 uploads/
 .pytest_cache/
 *.pdf
+PHASE*.md
