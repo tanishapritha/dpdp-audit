@@ -3,7 +3,7 @@ from pydantic import AnyHttpUrl, validator
 from pydantic_settings import BaseSettings
 
 class Settings(BaseSettings):
-    PROJECT_NAME: str = "PolicyPulse"
+    PROJECT_NAME: str = "Company Compliance Engine"
     API_V1_STR: str = "/api/v1"
     SECRET_KEY: str = "DEFAULT_SECRET_KEY"
     ACCESS_TOKEN_EXPIRE_MINUTES: int = 60 * 24 * 8  # 8 days

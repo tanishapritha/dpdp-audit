@@ -25,4 +25,4 @@ app.include_router(api_router, prefix=settings.API_V1_STR)
 
 @app.get("/")
 async def root():
-    return {"message": "PolicyPulse API is running"}
+    return {"message": "Company Compliance Engine API is running"}

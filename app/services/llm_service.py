@@ -13,8 +13,8 @@ class LLMService:
             api_key=settings.OPENAI_API_KEY,
             base_url=settings.OPENAI_API_BASE,
             default_headers={
-                "HTTP-Referer": "https://policypulse.ai",
-                "X-Title": "PolicyPulse Compliance Engine",
+                "HTTP-Referer": "https://compliance-engine.ai",
+                "X-Title": "Company Compliance Engine",
             }
         )
         # Default to a high-performance model available on OpenRouter
