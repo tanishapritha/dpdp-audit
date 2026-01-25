@@ -13,6 +13,9 @@ from app.models.user import User
 # Use in-memory SQLite for testing
 SQLALCHEMY_DATABASE_URL = "sqlite://"
 
+# For testing with SQLite, we need to use JSON instead of JSONB
+# This is handled automatically by SQLAlchemy's type coercion
+
 engine = create_engine(
     SQLALCHEMY_DATABASE_URL,
     connect_args={"check_same_thread": False},

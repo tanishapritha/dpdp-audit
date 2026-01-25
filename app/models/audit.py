@@ -1,4 +1,4 @@
-from sqlalchemy import Column, String, Integer, ForeignKey, Float, DateTime
+from sqlalchemy import Column, String, Integer, ForeignKey, Float, DateTime, JSON
 from sqlalchemy.dialects.postgresql import UUID, JSONB
 from sqlalchemy.orm import relationship
 from app.core.database import Base
@@ -23,8 +23,8 @@ class PolicyAudit(Base):
     owner_id = Column(UUID(as_uuid=True), ForeignKey("users.id"))
     created_at = Column(DateTime, default=datetime.utcnow)
     
-    # Store the final report as JSONB
-    report = Column(JSONB, nullable=True)
+    # Use JSON with JSONB for PostgreSQL (SQLAlchemy handles dialect switching)
+    report = Column(JSON().with_variant(JSONB, "postgresql"), nullable=True)
     
     # RAGAS metrics for quick access if needed, though they are in the report JSON too
     ragas_faithfulness = Column(Float, nullable=True)
