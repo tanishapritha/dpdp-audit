@@ -38,13 +38,37 @@ async def process_policy_task(policy_id: str, file_path: str, db_session_factory
         pages_content = pdf_processor.extract_text_with_pages(file_path)
         clauses = pdf_processor.segment_into_clauses(pages_content)
 
-        # 2. Analysis
+        # 2. Analysis - Route based on configuration
         audit.status = AuditStatus.ANALYZING
         audit.progress = 0.4
         db.commit()
 
-        compliance_engine = ComplianceEngine()
-        evaluation_results = await compliance_engine.evaluate_policy(clauses)
+        from app.core.config import settings
+        
+        if settings.USE_AGENT_BASED_EVALUATION:
+            # Agent-based evaluation (Phase 2)
+            from app.services.agents import AgentOrchestrator
+            orchestrator = AgentOrchestrator(db)
+            result = await orchestrator.evaluate_policy(clauses)
+            
+            # Convert agent output to legacy format for API compatibility
+            evaluation_results = {
+                "overall_verdict": result.overall_verdict,
+                "requirements": [
+                    {
+                        "requirement_id": a.requirement_id,
+                        "status": a.status,
+                        "reason": a.reasoning,
+                        "evidence": [a.evidence_quote] if a.evidence_quote else [],
+                        "page_numbers": a.page_numbers
+                    }
+                    for a in result.assessments
+                ]
+            }
+        else:
+            # Legacy evaluation (Phase 1)
+            compliance_engine = ComplianceEngine()
+            evaluation_results = await compliance_engine.evaluate_policy(clauses)
         
         audit.progress = 0.8
         db.commit()
@@ -63,7 +87,7 @@ async def process_policy_task(policy_id: str, file_path: str, db_session_factory
         # Format the final report
         from datetime import datetime
         audit.report = {
-            "policy_id": audit.id,
+            "policy_id": str(audit.id),
             "filename": audit.filename,
             "evaluated_at": datetime.utcnow().isoformat(),
             "overall_verdict": evaluation_results["overall_verdict"],

@@ -10,6 +10,7 @@ class Settings(BaseSettings):
     SQLALCHEMY_DATABASE_URL: str = "postgresql://user:pass@localhost:5432/dbname"
     OPENAI_API_KEY: str = ""
     OPENAI_API_BASE: str = "https://api.openai.com/v1"
+    USE_AGENT_BASED_EVALUATION: bool = True  # Toggle between legacy and agent-based system
 
     class Config:
         env_file = ".env"
