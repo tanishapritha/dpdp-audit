@@ -35,16 +35,18 @@ def test_access_other_user_policy_fails(client: TestClient, db, test_user, user_
     from app.models.user import User
     from app.core.security import get_password_hash
     from app.models.audit import PolicyAudit
+    from uuid import uuid4
     
     other_user = User(email="other@example.com", hashed_password=get_password_hash("pass"), role="USER")
     db.add(other_user)
     db.commit()
     
     # Create a policy owned by other user
-    policy = PolicyAudit(id="other-uuid", filename="secret.pdf", owner_id=other_user.id)
+    other_policy_id = uuid4()
+    policy = PolicyAudit(id=other_policy_id, filename="secret.pdf", owner_id=other_user.id)
     db.add(policy)
     db.commit()
     
     # Try to access it with test_user
-    response = client.get("/api/v1/other-uuid/status", headers=user_token_headers)
+    response = client.get(f"/api/v1/{other_policy_id}/status", headers=user_token_headers)
     assert response.status_code == 404

@@ -35,8 +35,11 @@ def test_upload_unauthorized(client: TestClient):
     assert response.status_code == 401
 
 def test_get_status_nonexistent(client: TestClient, user_token_headers):
+    from uuid import uuid4
+    # Use a valid UUID that doesn't exist in the database
+    nonexistent_uuid = uuid4()
     response = client.get(
-        "/api/v1/non-existent-uuid/status",
+        f"/api/v1/{nonexistent_uuid}/status",
         headers=user_token_headers
     )
     assert response.status_code == 404
