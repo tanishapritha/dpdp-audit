@@ -26,8 +26,5 @@ class PolicyAudit(Base):
     # Use JSON with JSONB for PostgreSQL (SQLAlchemy handles dialect switching)
     report = Column(JSON().with_variant(JSONB, "postgresql"), nullable=True)
     
-    # RAGAS metrics for quick access if needed, though they are in the report JSON too
-    ragas_faithfulness = Column(Float, nullable=True)
-    ragas_answer_relevancy = Column(Float, nullable=True)
-
+    # Audit relationships
     owner = relationship("User", backref="audits")

@@ -22,15 +22,14 @@ class PDFProcessor:
     def segment_into_clauses(pages_content: List[Dict]) -> List[Dict]:
         """
         Segments page text into clauses. 
-        For MVP, we use a simple newline-based segmentation, 
-        but we can improve it to look for clause patterns.
+        Uses a newline-based segmentation by default.
         """
         clauses = []
         for page_data in pages_content:
             page_num = page_data["page"]
             text = page_data["text"]
             
-            # Simple segmentation by lines/paragraphs for MVP
+            # Segmentation by lines/paragraphs
             lines = text.split('\n')
             current_clause = ""
             clause_id = 1

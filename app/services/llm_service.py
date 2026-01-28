@@ -76,7 +76,7 @@ class LLMService:
             "Analyze the following privacy policy text and extract individual clauses.\n"
             "Maintain the original structure and context.\n\n"
             "Text:\n"
-            f"{text[:10000]}\n\n" # Truncate for safety in MVP context
+            f"{text[:10000]}\n\n" # Truncate for safety
             "Return JSON array of objects: {\"page\": int, \"clause_id\": string, \"text\": string}"
         )
 

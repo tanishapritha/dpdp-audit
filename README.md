@@ -1,47 +1,43 @@
 # Company Compliance Engine - Implementation Complete
 
 ## Overview
-A production-ready compliance auditing system that evaluates privacy policies against the Digital Personal Data Protection (DPDP) Act, 2023.
+A production-ready compliance auditing system that evaluates privacy policies against regulatory frameworks like the Digital Personal Data Protection (DPDP) Act, 2023 and GDPR.
 
 ## Architecture
 
 ### Database Layer (PostgreSQL)
-- UUID-based primary keys across all tables
-- JSONB for extensible report storage
-- Compliance framework models with foreign key integrity
-- Automatic seeding of DPDP requirements on startup
+- **Hybrid Search**: `PgVector` integration for semantic vector retrieval.
+- **Identity**: UUID-based primary keys across all tables.
+- **Reporting**: JSONB for extensible, structured report storage.
+- **Multi-Framework**: Support for DPDP and GDPR-Lite seeded from JSON data.
 
-### Agent-Based Evaluation Pipeline
-1. **Planner Agent** - Selects relevant requirements from database
-2. **Evidence Retriever** - Keyword-based document chunk retrieval
-3. **Reasoner Agent** - Per-requirement compliance assessment
-4. **Verifier Agent** - Validates and potentially downgrades assessments
-5. **Orchestrator** - Coordinates pipeline with deterministic verdict logic
+### Production-Grade RAG Pipeline
+1. **Layout-Aware Extraction**: Uses `PyMuPDF` to identify headers, articles, and section hierarchy.
+2. **Semantic Context Retrieval**: Context-aware chunking (1500 chars) preserving parent section metadata.
+3. **Hybrid Search**: Combines semantic vector similarity (OpenAI embeddings) with keyword boosting.
+4. **4-Agent Pipeline**:
+    - **Planner**: Selects relevant regulatory requirements.
+    - **Hybrid Retriever**: Fetches evidence from the indexed document.
+    - **Reasoner**: Performs deep compliance assessment with citations.
+    - **Verifier**: Hard-coded safety agent that can only downgrade confidence/status.
 
-### Observability & Trust
-- **Latency Tracking**: Measures execution time for each agent and operation
-- **Execution Tracing**: Captures structured traces of all evaluation steps
-- **Explainability Helpers**: Internal utilities for debugging decisions
-- **Failure Transparency**: Graceful degradation with UNKNOWN status on errors
+### Audit Defensibility & Trust
+- **Evidence Hashes**: Every evidence quote is SHA-256 hashed during evaluation.
+- **Immutable Snapshots**: Reports are frozen with a cryptographic fingerprint after completion.
+- **Tamper Detection**: Verification logic that invalidates snapshots if evidence is modified.
+- **Explainability**: Internal utilities to trace the exact reasoning path of the agents.
+- **Observability**: Nano-second precision latency tracking for every agent operation.
 
-## Key Design Principles
+## Design Principles
 
 ### Determinism
-- Final verdicts computed by code logic, not AI
-- Verdict rules: NON_COMPLIANT → RED, PARTIAL/UNKNOWN → YELLOW, ALL COMPLIANT → GREEN
-- All AI outputs validated against Pydantic schemas
+- Final compliance verdicts (RED/YELLOW/GREEN) computed by code logic, not AI.
+- AI outputs are strictly constrained by Pydantic contracts.
 
 ### Safety Guardrails
-- AI cannot invent requirement IDs (validated against database)
-- Verifier can only downgrade, never upgrade assessments
-- Missing evidence defaults to UNKNOWN status
-- Invalid AI outputs are discarded, not corrected
-
-### Auditability
-- All requirements loaded from database (single source of truth)
-- Every assessment includes explicit reasoning and evidence citations
-- Complete execution traces stored in metadata
-- Per-requirement and per-agent latency metrics captured
+- **Verifier Constraint**: AI can never "upgrade" compliance; it can only verify or flag as unknown.
+- **Requirement Enforcement**: AI is prevented from inventing or hallucinating requirement IDs.
+- **Failure Transparency**: Any pipeline error results in a graceful `UNKNOWN` state.
 
 ## API Endpoints
 
@@ -50,157 +46,31 @@ A production-ready compliance auditing system that evaluates privacy policies ag
 - `GET /api/v1/me` - Get current user details
 
 ### Compliance Evaluation
-- `POST /api/v1/upload` - Upload PDF policy for analysis
-- `GET /api/v1/{policy_id}/status` - Poll evaluation progress
-- `GET /api/v1/{policy_id}/report` - Retrieve final compliance report
+- `POST /api/v1/upload` - Upload PDF policy for layout-aware indexing and multi-agent analysis.
+- `GET /api/v1/{policy_id}/status` - Poll evaluation and indexing progress.
+- `GET /api/v1/{policy_id}/report` - Retrieve frozen compliance report with cryptographic proof.
 
-## Configuration
+## Key Features
 
-### Environment Variables
-```bash
-PROJECT_NAME="Company Compliance Engine"
-SQLALCHEMY_DATABASE_URL="postgresql://user:pass@localhost:5432/db"
-OPENAI_API_KEY="sk-..."
-OPENAI_API_BASE="https://openrouter.ai/api/v1"
-SECRET_KEY="your-secret-key"
-USE_AGENT_BASED_EVALUATION=true  # Toggle agent vs legacy system
-```
+### Multi-Framework Support
+The system treats laws as data. It automatically discovers and seeds frameworks from the `compliance/` directory.
 
-### Toggle Between Systems
-- Set `USE_AGENT_BASED_EVALUATION=true` for agent-based evaluation
-- Set `USE_AGENT_BASED_EVALUATION=false` for legacy evaluation
-- Both systems produce identical API response formats
-
-## Testing
-
-### Critical Test Suite
-Six essential tests prove system safety:
-1. Agent pipeline end-to-end functionality
-2. Requirement ID enforcement (no AI invention)
-3. Missing evidence → UNKNOWN status
-4. Verifier never upgrades (only downgrades)
-5. Deterministic verdict without AI
-6. Configuration routing isolation
-
-Run tests:
-```bash
-pytest tests/
-```
-
-## Data Models
-
-### Compliance Framework
-- Stores regulatory framework metadata (DPDP 2023)
-- Seeded automatically from `compliance/dpdp/dpdp_2023_requirements.json`
-- Extensible to additional frameworks (GDPR, CCPA, etc.)
-
-### Compliance Requirements
-- 14 DPDP statutory requirements
-- Each with requirement ID, section reference, risk level, and full text
-- Used as source of truth for all evaluations
-
-### Policy Audits
-- Tracks evaluation status (PENDING → EXTRACTING → ANALYZING → COMPLETED)
-- Stores final report as JSONB
-- Includes RAGAS faithfulness and relevancy metrics
-
-## Observability Features
-
-### Latency Metrics
-Captured for each operation:
-- Requirement loading
-- Planner execution
-- Evidence retrieval per requirement
-- Reasoner execution per requirement
-- Verifier execution per requirement
-- Total evaluation time
-
-### Execution Traces
-Complete audit trail includes:
-- Planner selected requirement IDs
-- Evidence bundles retrieved
-- Reasoner assessments
-- Verifier decisions
-- Downgrades and confidence adjustments
-
-### Explainability (Internal)
-Helper functions for debugging:
-- `explain_requirement_status()` - Why was this requirement marked X?
-- `explain_verdict()` - How was the final verdict determined?
-- `get_evidence_chain()` - What evidence was used?
-- `list_failed_requirements()` - Which requirements failed?
-
-## Security
-
-- JWT-based authentication with bcrypt password hashing
-- User isolation: users can only access their own audits
-- Role-based access control (USER, ADMIN) in place for future expansion
-- CORS configured (currently permissive for MVP)
-
-## Deployment
-
-### Database Setup
-```bash
-# Create PostgreSQL database
-createdb compliance_db
-
-# Update .env
-SQLALCHEMY_DATABASE_URL="postgresql://user:pass@localhost:5432/compliance_db"
-
-# Run application (auto-seeds requirements)
-uvicorn app.main:app --reload
-```
-
-### Verify Startup
-On successful startup:
-```
-✓ Compliance framework initialized successfully
-```
-
-## Future Extensibility
-
-The architecture supports:
-- Additional compliance frameworks (GDPR, CCPA)
-- Advanced retrieval strategies (vector search)
-- Human-in-the-loop workflows
-- Multi-language policy analysis
-- Real-time streaming evaluations
-
-All without breaking existing API contracts.
+### Professional Export
+- **JSON Export**: Full machine-readable trace with hashes and fingerprints.
+- **PDF Export**: Human-friendly audit report with color-coded verdicts and evidence citations.
 
 ## Technical Stack
-
 - **Framework**: FastAPI + SQLAlchemy 2.0
-- **Database**: PostgreSQL with UUID and JSONB
-- **AI**: OpenAI/OpenRouter (gpt-4o-mini)
-- **PDF Processing**: pdfplumber
-- **Quality Metrics**: RAGAS (faithfulness, answer relevancy)
-- **Testing**: pytest with async support
-- **Authentication**: JWT with OAuth2
-
-## Repository Structure
-```
-BACKEND/
-├── app/
-│   ├── api/v1/endpoints/    # API routes
-│   ├── core/                # Config, database, security
-│   ├── models/              # SQLAlchemy models
-│   ├── schemas/             # Pydantic schemas
-│   └── services/
-│       ├── agents/          # Agent-based evaluation
-│       ├── compliance_engine.py  # Legacy evaluation
-│       ├── llm_service.py
-│       ├── pdf_processor.py
-│       └── ragas_evaluator.py
-├── compliance/dpdp/         # DPDP requirements data
-├── tests/                   # Test suite
-└── requirements.txt
-```
+- **Database**: PostgreSQL + PgVector
+- **AI**: OpenAI/OpenRouter (gpt-4o-mini + text-embedding-3-small)
+- **PDF**: PyMuPDF (Fitz)
+- **Security**: SHA-256 Hashing + JWT + Bcrypt
+- **Testing**: Pytest (Async)
 
 ## Status
-
 ✅ Phase 1: PostgreSQL migration with UUID and compliance models  
-✅ Phase 2: Agent-based evaluation with strict validation  
+✅ Phase 2: Multi-agent reasoning pipeline  
 ✅ Phase 3: Observability, tracing, and explainability  
+✅ Phase 4: Audit Defensibility (Freezing/Hashing) + Hybrid RAG (PgVector)
 
-**System is production-ready for deployment.**
+**System is production-ready for audit and deployment.**

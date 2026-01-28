@@ -18,7 +18,7 @@ class EvidenceRetriever:
         Input: requirement_id, keywords, document clauses
         Output: EvidenceBundle with top-k relevant chunks
         
-        Uses keyword-based scoring (no embeddings in Phase 2).
+        Uses keyword-based scoring.
         """
         scored_chunks = []
         

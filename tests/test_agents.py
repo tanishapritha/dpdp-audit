@@ -59,17 +59,27 @@ def sample_clauses():
 
 # Test 1: Agent Pipeline Happy Path
 @pytest.mark.asyncio
-async def test_agent_pipeline_happy_path(db, seeded_requirements, sample_clauses):
+async def test_agent_pipeline_happy_path(db, seeded_requirements, tmp_path):
     """
-    Purpose: Prove the agent system works end-to-end.
+    Purpose: Prove the agent system works end-to-end with the new ingestion pipeline.
     """
+    # Create a dummy PDF file
+    dummy_pdf = tmp_path / "test.pdf"
+    import fitz
+    doc = fitz.open()
+    page = doc.new_page()
+    page.insert_text((50, 50), "We collect personal data only with explicit user consent.")
+    doc.save(str(dummy_pdf))
+    doc.close()
+
     orchestrator = AgentOrchestrator(db)
-    result = await orchestrator.evaluate_policy(sample_clauses)
+    result = await orchestrator.ingest_and_evaluate(str(dummy_pdf))
     
     assert len(result.assessments) > 0
     assert all(a.requirement_id is not None for a in result.assessments)
     assert result.overall_verdict in ["RED", "YELLOW", "GREEN"]
-    assert "evaluated_at" in result.metadata
+    assert "engine" in result.metadata
+    assert "evaluation_date" in result.metadata["engine"]
 
 # Test 2: Requirement ID Enforcement
 def test_invalid_requirement_id_rejected(db, seeded_requirements):

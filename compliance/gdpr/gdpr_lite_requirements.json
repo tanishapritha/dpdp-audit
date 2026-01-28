@@ -1,0 +1,44 @@
+{
+    "framework": {
+        "name": "GDPR-Lite",
+        "version": "1.0",
+        "effective_date": "2018-05-25"
+    },
+    "requirements": [
+        {
+            "requirement_id": "GDPR_L_1",
+            "section_ref": "Article 6",
+            "title": "Lawfulness of Processing",
+            "requirement_text": "Processing shall be lawful only if and to the extent that at least one of the conditions for lawfulness is met (e.g., consent, contract).",
+            "risk_level": "HIGH"
+        },
+        {
+            "requirement_id": "GDPR_L_2",
+            "section_ref": "Article 12",
+            "title": "Transparent Information",
+            "requirement_text": "The controller shall take appropriate measures to provide any information relating to processing to the data subject in a concise, transparent, intelligible and easily accessible form.",
+            "risk_level": "HIGH"
+        },
+        {
+            "requirement_id": "GDPR_L_3",
+            "section_ref": "Article 15",
+            "title": "Right of Access",
+            "requirement_text": "The data subject shall have the right to obtain from the controller confirmation as to whether or not personal data concerning him or her are being processed.",
+            "risk_level": "MEDIUM"
+        },
+        {
+            "requirement_id": "GDPR_L_4",
+            "section_ref": "Article 17",
+            "title": "Right to Erasure (Right to be Forgotten)",
+            "requirement_text": "The data subject shall have the right to obtain from the controller the erasure of personal data concerning him or her without undue delay.",
+            "risk_level": "HIGH"
+        },
+        {
+            "requirement_id": "GDPR_L_5",
+            "section_ref": "Article 32",
+            "title": "Security of Processing",
+            "requirement_text": "The controller and the processor shall implement appropriate technical and organisational measures to ensure a level of security appropriate to the risk.",
+            "risk_level": "HIGH"
+        }
+    ]
+}

@@ -12,7 +12,6 @@ from app.models.audit import PolicyAudit, AuditStatus
 from app.schemas.audit import UploadResponse
 from app.services.pdf_processor import PDFProcessor
 from app.services.compliance_engine import ComplianceEngine
-from app.services.ragas_evaluator import RagasEvaluator
 
 router = APIRouter()
 
@@ -29,16 +28,7 @@ async def process_policy_task(policy_id: str, file_path: str, db_session_factory
         if not audit:
             return
 
-        # 1. Extraction
-        audit.status = AuditStatus.EXTRACTING
-        audit.progress = 0.2
-        db.commit()
-
-        pdf_processor = PDFProcessor()
-        pages_content = pdf_processor.extract_text_with_pages(file_path)
-        clauses = pdf_processor.segment_into_clauses(pages_content)
-
-        # 2. Analysis - Route based on configuration
+        # Analysis - Route based on configuration
         audit.status = AuditStatus.ANALYZING
         audit.progress = 0.4
         db.commit()
@@ -46,12 +36,12 @@ async def process_policy_task(policy_id: str, file_path: str, db_session_factory
         from app.core.config import settings
         
         if settings.USE_AGENT_BASED_EVALUATION:
-            # Agent-based evaluation (Phase 2)
+            # New Production-Grade Ingestion & Evaluation
             from app.services.agents import AgentOrchestrator
-            orchestrator = AgentOrchestrator(db)
-            result = await orchestrator.evaluate_policy(clauses)
+            orchestrator = AgentOrchestrator(db, audit_id=policy_id)
+            result = await orchestrator.ingest_and_evaluate(file_path)
             
-            # Convert agent output to legacy format for API compatibility
+            # Use the frozen snapshot structure
             evaluation_results = {
                 "overall_verdict": result.overall_verdict,
                 "requirements": [
@@ -65,36 +55,39 @@ async def process_policy_task(policy_id: str, file_path: str, db_session_factory
                     for a in result.assessments
                 ]
             }
+            frozen_report = result.metadata
         else:
-            # Legacy evaluation (Phase 1)
+            # Legacy extraction for standard engine (if still used)
+            pdf_processor = PDFProcessor()
+            pages_content = pdf_processor.extract_text_with_pages(file_path)
+            clauses = pdf_processor.segment_into_clauses(pages_content)
+            
+            # Standard evaluation
             compliance_engine = ComplianceEngine()
             evaluation_results = await compliance_engine.evaluate_policy(clauses)
+            frozen_report = None
         
         audit.progress = 0.8
         db.commit()
 
-        # 3. Ragas Evaluation
-        ragas_metrics = await RagasEvaluator.evaluate_compliance(
-            evaluation_results["requirements"], clauses
-        )
-        
-        # 4. Finalize
+        # 3. Finalize
         audit.status = AuditStatus.COMPLETED
         audit.progress = 1.0
-        audit.ragas_faithfulness = ragas_metrics["faithfulness"]
-        audit.ragas_answer_relevancy = ragas_metrics["answer_relevancy"]
         
         # Format the final report
         from datetime import datetime
-        audit.report = {
-            "policy_id": str(audit.id),
-            "filename": audit.filename,
-            "evaluated_at": datetime.utcnow().isoformat(),
-            "overall_verdict": evaluation_results["overall_verdict"],
-            "ragas_faithfulness": audit.ragas_faithfulness,
-            "ragas_answer_relevancy": audit.ragas_answer_relevancy,
-            "requirements": evaluation_results["requirements"]
-        }
+        if frozen_report:
+            # AuditSnapshotter already computed initial fingerprint
+            # No RAGAS updates needed now
+            audit.report = frozen_report
+        else:
+            audit.report = {
+                "policy_id": str(audit.id),
+                "filename": audit.filename,
+                "evaluated_at": datetime.utcnow().isoformat(),
+                "overall_verdict": evaluation_results["overall_verdict"],
+                "requirements": evaluation_results["requirements"]
+            }
         db.commit()
 
     except Exception as e:

@@ -20,8 +20,6 @@ class PolicyReportResponse(BaseModel):
     filename: str
     evaluated_at: datetime
     overall_verdict: str
-    ragas_faithfulness: float
-    ragas_answer_relevancy: float
     requirements: List[RequirementResult]
 
 class UploadResponse(BaseModel):
