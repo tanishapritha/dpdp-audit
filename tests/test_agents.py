@@ -6,40 +6,6 @@ from app.schemas.agents import RequirementAssessment, VerifiedAssessment
 from app.services.agents.core_agents import VerifierAgent
 from datetime import date
 
-@pytest.fixture
-def seeded_requirements(db):
-    """Seed test database with DPDP requirements."""
-    framework = ComplianceFramework(
-        name="DPDP",
-        version="2023",
-        effective_date=date(2023, 8, 11),
-        description="Test framework"
-    )
-    db.add(framework)
-    db.flush()
-    
-    requirements = [
-        ComplianceRequirement(
-            framework_id=framework.id,
-            requirement_id="DPDP_6_1",
-            section_ref="Section 6(1)",
-            title="Valid Consent Before Processing",
-            requirement_text="The Data Fiduciary must obtain consent.",
-            risk_level=RiskLevel.HIGH
-        ),
-        ComplianceRequirement(
-            framework_id=framework.id,
-            requirement_id="DPDP_8_7",
-            section_ref="Section 8(7)",
-            title="Erasure of Personal Data",
-            requirement_text="Data must be erased upon withdrawal.",
-            risk_level=RiskLevel.HIGH
-        )
-    ]
-    for req in requirements:
-        db.add(req)
-    db.commit()
-    return requirements
 
 @pytest.fixture
 def sample_clauses():

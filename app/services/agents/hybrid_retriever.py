@@ -41,7 +41,13 @@ class HybridRetriever:
         """
         Performs hybrid search. Falls back to keyword search on SQLite/Testing.
         """
-        is_sqlite = "sqlite" in str(self.db.get_bind().url)
+        # Safely check for SQLite
+        try:
+            bind = self.db.get_bind()
+            url = str(bind.url) if hasattr(bind, 'url') else str(bind.engine.url)
+            is_sqlite = "sqlite" in url
+        except Exception:
+            is_sqlite = False
         
         if is_sqlite:
             # Fallback for Testing/SQLite environment
@@ -56,7 +62,10 @@ class HybridRetriever:
             for row in results:
                 enriched_text = f"[Context: {row.section_context}]\n{row.text}"
                 document_chunks.append(enriched_text)
-                chunk_metadata.append({"page": row.page_number, "score": 1.0, "type": "sqlite_fallback"})
+                meta = {"page": row.page_number, "score": 1.0, "type": "sqlite_fallback"}
+                if row.chunk_metadata:
+                    meta.update(row.chunk_metadata)
+                chunk_metadata.append(meta)
             
             return EvidenceBundle(requirement_id=requirement_id, law_clauses=[], document_chunks=document_chunks, chunk_metadata=chunk_metadata)
 
@@ -69,6 +78,7 @@ class HybridRetriever:
                 text, 
                 page_number, 
                 section_context,
+                chunk_metadata,
                 (1.0 / (1.0 + (embedding <=> :vector))) AS vector_score,
                 (CASE WHEN text ILIKE :keyword THEN 0.5 ELSE 0 END) AS keyword_score
             FROM document_chunks
@@ -92,11 +102,23 @@ class HybridRetriever:
             # Enrich text with section context for the reasoner
             enriched_text = f"[Context: {row.section_context}]\n{row.text}"
             document_chunks.append(enriched_text)
-            chunk_metadata.append({
+            
+            # Handle potential JSON parsing if DB returns it as string
+            raw_meta = row.chunk_metadata
+            if isinstance(raw_meta, str):
+                try:
+                    raw_meta = json.loads(raw_meta)
+                except:
+                    raw_meta = {}
+            
+            meta = {
                 "page": row.page_number,
                 "score": float(row.vector_score + row.keyword_score),
                 "type": "hybrid_result"
-            })
+            }
+            if raw_meta:
+                meta.update(raw_meta)
+            chunk_metadata.append(meta)
             
         return EvidenceBundle(
             requirement_id=requirement_id,

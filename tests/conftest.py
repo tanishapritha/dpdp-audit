@@ -9,6 +9,8 @@ from app.main import app
 from app.core.database import Base, get_db
 from app.core.security import get_password_hash
 from app.models.user import User
+from app.models.compliance import ComplianceRequirement, ComplianceFramework, RiskLevel
+from datetime import date
 
 # Use in-memory SQLite for testing
 SQLALCHEMY_DATABASE_URL = "sqlite://"
@@ -75,3 +77,38 @@ def user_token_headers(client, test_user):
     tokens = r.json()
     a_token = tokens["access_token"]
     return {"Authorization": f"Bearer {a_token}"}
+
+@pytest.fixture(scope="function")
+def seeded_requirements(db):
+    """Seed test database with DPDP requirements."""
+    framework = ComplianceFramework(
+        name="DPDP",
+        version="2023",
+        effective_date=date(2023, 8, 11),
+        description="Test framework"
+    )
+    db.add(framework)
+    db.flush()
+    
+    requirements = [
+        ComplianceRequirement(
+            framework_id=framework.id,
+            requirement_id="DPDP_6_1",
+            section_ref="Section 6(1)",
+            title="Valid Consent Before Processing",
+            requirement_text="The Data Fiduciary must obtain consent.",
+            risk_level=RiskLevel.HIGH
+        ),
+        ComplianceRequirement(
+            framework_id=framework.id,
+            requirement_id="DPDP_8_7",
+            section_ref="Section 8(7)",
+            title="Erasure of Personal Data",
+            requirement_text="Data must be erased upon withdrawal.",
+            risk_level=RiskLevel.HIGH
+        )
+    ]
+    for req in requirements:
+        db.add(req)
+    db.commit()
+    return requirements

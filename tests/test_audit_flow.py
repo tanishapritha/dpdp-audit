@@ -50,3 +50,46 @@ def test_access_other_user_policy_fails(client: TestClient, db, test_user, user_
     # Try to access it with test_user
     response = client.get(f"/api/v1/{other_policy_id}/status", headers=user_token_headers)
     assert response.status_code == 404
+
+def test_report_structure_in_agent_mode(client: TestClient, db, user_token_headers):
+    """Checks if the report returned by the API matches the required structure when agent mode is ON."""
+    from app.core.config import settings
+    from app.models.user import User
+    from app.models.audit import PolicyAudit, AuditStatus
+    from uuid import uuid4
+    from datetime import datetime
+    
+    # 1. Force agent mode
+    settings.USE_AGENT_BASED_EVALUATION = True
+    
+    # 2. Setup a completed audit
+    audit_id = uuid4()
+    audit = PolicyAudit(
+        id=audit_id,
+        filename="test.pdf",
+        owner_id=db.query(User).filter(User.email == "test_tester@example.com").first().id,
+        status=AuditStatus.COMPLETED,
+        progress=1.0,
+        report={
+            "audit_id": str(audit_id),
+            "fingerprint": "mock_hash",
+            "timestamp": datetime.utcnow().isoformat(),
+            "results": {
+                "verdict": "GREEN",
+                "requirements": []
+            }
+        }
+    )
+    db.add(audit)
+    db.commit()
+    
+    # 3. Fetch report
+    response = client.get(f"/api/v1/{audit_id}/report", headers=user_token_headers)
+    
+    # This might fail if PolicyReportResponse is too strict or doesn't match the keys
+    if response.status_code != 200:
+        print(f"DEBUG: Response body: {response.json()}")
+    
+    assert response.status_code == 200
+    data = response.json()
+    assert "overall_verdict" in data or "results" in data

@@ -42,7 +42,7 @@ class AgentOrchestrator:
         self.latency_tracker = LatencyTracker()
         self.tracer = ExecutionTracer()
 
-    async def ingest_and_evaluate(self, file_path: str) -> AgentOrchestrationResult:
+    async def ingest_and_evaluate(self, file_path: str, framework_id: Optional[UUID] = None) -> AgentOrchestrationResult:
         """
         New Entry Point: Handles structured ingestion then evaluation.
         """
@@ -57,30 +57,37 @@ class AgentOrchestrator:
             retriever = HybridRetriever(self.db)
             for i, chunk in enumerate(chunks):
                 embedding = retriever._get_embedding(chunk["text"])
+                print(f"DEBUG: Embedding type: {type(embedding)}")
+                if hasattr(embedding, 'shape'): # Check if numpy array
+                     print(f"DEBUG: Embedding is numpy, converting to list")
+                     embedding = embedding.tolist()
+                
                 db_chunk = DocumentChunk(
                     audit_id=self.audit_id,
                     chunk_index=i,
                     text=chunk["text"],
                     section_context=chunk.get("section_context"),
                     page_number=chunk["pages"][0] if chunk["pages"] else 1,
+                    chunk_metadata=chunk.get("metadata", {}),
                     embedding=embedding
                 )
                 self.db.add(db_chunk)
             self.db.commit()
 
         # 3. Proceed to Evaluation using Hybrid Retrieval
-        return await self.evaluate_policy(query_context="General Compliance")
+        return await self.evaluate_policy(query_context="General Compliance", framework_id=framework_id)
 
     async def evaluate_policy(
         self, 
-        query_context: str = ""
+        query_context: str = "",
+        framework_id: Optional[UUID] = None
     ) -> AgentOrchestrationResult:
         """
         Main orchestration method with observability and hybrid retrieval.
         """
         # Step 1: Load requirements from database
         with self.latency_tracker.measure("load_requirements"):
-            requirements = self._load_requirements()
+            requirements = self._load_requirements(framework_id=framework_id)
             if not requirements:
                 raise RuntimeError("No compliance requirements found in database")
         
@@ -132,6 +139,13 @@ class AgentOrchestrator:
                     assessment.status = verification.verified_status
                     assessment.confidence = verification.verified_confidence
                 
+                # Attach bboxes and refined metadata to the assessment for the UI
+                bboxes = []
+                for meta in evidence.chunk_metadata:
+                    if "bboxes" in meta:
+                        bboxes.extend(meta["bboxes"])
+                assessment.metadata["bboxes"] = bboxes
+                
                 assessments.append(assessment)
                 
             except Exception as e:
@@ -162,7 +176,7 @@ class AgentOrchestrator:
                 }
 
         frozen_report = AuditSnapshotter.create_frozen_snapshot(
-            audit_id=self.audit_id or "00000000-0000-0000-0000-000000000000",
+            audit_id=str(self.audit_id),
             framework_metadata=framework_metadata,
             assessments=assessments,
             overall_verdict=overall_verdict,
@@ -175,12 +189,14 @@ class AgentOrchestrator:
             metadata=frozen_report
         )
 
-    def _load_requirements(self) -> List[Dict[str, Any]]:
+    def _load_requirements(self, framework_id: Optional[UUID] = None) -> List[Dict[str, Any]]:
         """
-        Load all compliance requirements from database.
-        Returns list of dicts with requirement metadata.
+        Load compliance requirements from database, optionally filtered by framework.
         """
-        requirements = self.db.query(ComplianceRequirement).all()
+        query = self.db.query(ComplianceRequirement)
+        if framework_id:
+            query = query.filter(ComplianceRequirement.framework_id == framework_id)
+        requirements = query.all()
         return [
             {
                 "requirement_id": req.requirement_id,

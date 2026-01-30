@@ -70,7 +70,8 @@ class AuditSnapshotter:
             "metadata": {
                 "execution_trace": execution_trace,
                 "integrity_check_passed": True
-            }
+            },
+            "trace": execution_trace
         }
         
         # Calculate fingerprint for the entire snapshot
