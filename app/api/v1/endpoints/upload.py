@@ -1,4 +1,4 @@
-from typing import Any
+from typing import Any, Optional
 from fastapi import APIRouter, Depends, HTTPException, UploadFile, File, BackgroundTasks
 from sqlalchemy.orm import Session
 import os
@@ -20,7 +20,7 @@ UPLOAD_DIR = "uploads"
 if not os.path.exists(UPLOAD_DIR):
     os.makedirs(UPLOAD_DIR)
 
-async def process_policy_task(policy_id: str, file_path: str, db_session_factory):
+async def process_policy_task(policy_id: str, file_path: str, db_session_factory, framework_id: Optional[str] = None):
     # We use a session factory to avoid issues with background tasks and shared sessions
     db = db_session_factory()
     try:
@@ -39,7 +39,9 @@ async def process_policy_task(policy_id: str, file_path: str, db_session_factory
             # New Production-Grade Ingestion & Evaluation
             from app.services.agents import AgentOrchestrator
             orchestrator = AgentOrchestrator(db, audit_id=policy_id)
-            result = await orchestrator.ingest_and_evaluate(file_path)
+            # framework_id comes as string from frontend
+            fw_uuid = uuid.UUID(framework_id) if framework_id else None
+            result = await orchestrator.ingest_and_evaluate(file_path, framework_id=fw_uuid)
             
             # Use the frozen snapshot structure
             evaluation_results = {
@@ -104,6 +106,7 @@ async def process_policy_task(policy_id: str, file_path: str, db_session_factory
 async def upload_policy(
     background_tasks: BackgroundTasks,
     file: UploadFile = File(...),
+    framework_id: Optional[str] = None,
     db: Session = Depends(get_db),
     current_user: User = Depends(deps.get_current_user),
 ) -> Any:
@@ -132,7 +135,7 @@ async def upload_policy(
 
     # Note: In a real app we'd use a session factory or pass the engine
     from app.core.database import SessionLocal
-    background_tasks.add_task(process_policy_task, policy_id, file_path, SessionLocal)
+    background_tasks.add_task(process_policy_task, policy_id, file_path, SessionLocal, framework_id)
 
     return {
         "policy_id": policy_id,

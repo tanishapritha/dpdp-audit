@@ -1,4 +1,4 @@
-from typing import List, Optional
+from typing import List, Optional, Dict, Any
 from pydantic import BaseModel, Field, validator
 from uuid import UUID
 
@@ -68,6 +68,10 @@ class RequirementAssessment(BaseModel):
     page_numbers: List[int] = Field(
         default_factory=list,
         description="Page numbers where evidence was found"
+    )
+    metadata: Dict[str, Any] = Field(
+        default_factory=dict,
+        description="Traceability metadata including bounding boxes"
     )
 
     @validator('status')
