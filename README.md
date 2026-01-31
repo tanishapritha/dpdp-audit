@@ -1,76 +1,34 @@
-# Company Compliance Engine - Implementation Complete
+# DPDP Audit Engine
+Automated privacy compliance. Fast. Deterministic. Traceable.
 
-## Overview
-A production-ready compliance auditing system that evaluates privacy policies against regulatory frameworks like the Digital Personal Data Protection (DPDP) Act, 2023 and GDPR.
+## Problem
+Reading 50-page privacy policies to check for DPDP compliance is a manual nightmare. It’s slow, expensive, and leaves no audit trail.
 
-## Architecture
+## Solution
+A 4-agent RAG pipeline that audits documents against regulatory frameworks with cryptographic proof.
+- **Layout-Aware**: Parses headers and hierarchy, not just raw text.
+- **Hybrid RAG**: `PgVector` + Keyword search for high-precision retrieval.
+- **Agentic Reasoning**: Planner, Retriever, Reasoner, and a Safety Verifier.
+- **Immutable Proof**: SHA-256 hashes for every evidence snippet.
 
-### Database Layer (PostgreSQL)
-- **Hybrid Search**: `PgVector` integration for semantic vector retrieval.
-- **Identity**: UUID-based primary keys across all tables.
-- **Reporting**: JSONB for extensible, structured report storage.
-- **Multi-Framework**: Support for DPDP and GDPR-Lite seeded from JSON data.
+## Tech Stack
+- **Backend**: FastAPI + SQLAlchemy 2.0
+- **Database**: PostgreSQL (PgVector)
+- **AI**: OpenAI (GPT-4o-mini)
+- **Extraction**: PyMuPDF
 
-### Production-Grade RAG Pipeline
-1. **Layout-Aware Extraction**: Uses `PyMuPDF` to identify headers, articles, and section hierarchy.
-2. **Semantic Context Retrieval**: Context-aware chunking (1500 chars) preserving parent section metadata.
-3. **Hybrid Search**: Combines semantic vector similarity (OpenAI embeddings) with keyword boosting.
-4. **4-Agent Pipeline**:
-    - **Planner**: Selects relevant regulatory requirements.
-    - **Hybrid Retriever**: Fetches evidence from the indexed document.
-    - **Reasoner**: Performs deep compliance assessment with citations.
-    - **Verifier**: Hard-coded safety agent that can only downgrade confidence/status.
+## Demo
+| Ingestion Pipeline | Agent Reasoning | Compliance Report |
+| :--- | :--- | :--- |
+| ![Ingestion](demo/ingestion.png) | ![Live Trace](demo/live_trace.png) | ![Baseline](demo/baseline.png) |
+| *Parsing hierarchy* | *4-agent execution trace* | *Final risk baseline* |
 
-### Audit Defensibility & Trust
-- **Evidence Hashes**: Every evidence quote is SHA-256 hashed during evaluation.
-- **Immutable Snapshots**: Reports are frozen with a cryptographic fingerprint after completion.
-- **Tamper Detection**: Verification logic that invalidates snapshots if evidence is modified.
-- **Explainability**: Internal utilities to trace the exact reasoning path of the agents.
-- **Observability**: Nano-second precision latency tracking for every agent operation.
+## Setup
+1. **Env**: `cp .env.example .env` (Add OpenAI keys + DB URL)
+2. **Install**: `pip install -r requirements.txt`
+3. **Run**: `uvicorn app.main:app --reload`
 
-## Design Principles
-
-### Determinism
-- Final compliance verdicts (RED/YELLOW/GREEN) computed by code logic, not AI.
-- AI outputs are strictly constrained by Pydantic contracts.
-
-### Safety Guardrails
-- **Verifier Constraint**: AI can never "upgrade" compliance; it can only verify or flag as unknown.
-- **Requirement Enforcement**: AI is prevented from inventing or hallucinating requirement IDs.
-- **Failure Transparency**: Any pipeline error results in a graceful `UNKNOWN` state.
-
-## API Endpoints
-
-### Authentication
-- `POST /api/v1/login/access-token` - Generate JWT token
-- `GET /api/v1/me` - Get current user details
-
-### Compliance Evaluation
-- `POST /api/v1/upload` - Upload PDF policy for layout-aware indexing and multi-agent analysis.
-- `GET /api/v1/{policy_id}/status` - Poll evaluation and indexing progress.
-- `GET /api/v1/{policy_id}/report` - Retrieve frozen compliance report with cryptographic proof.
-
-## Key Features
-
-### Multi-Framework Support
-The system treats laws as data. It automatically discovers and seeds frameworks from the `compliance/` directory.
-
-### Professional Export
-- **JSON Export**: Full machine-readable trace with hashes and fingerprints.
-- **PDF Export**: Human-friendly audit report with color-coded verdicts and evidence citations.
-
-## Technical Stack
-- **Framework**: FastAPI + SQLAlchemy 2.0
-- **Database**: PostgreSQL + PgVector
-- **AI**: OpenAI/OpenRouter (gpt-4o-mini + text-embedding-3-small)
-- **PDF**: PyMuPDF (Fitz)
-- **Security**: SHA-256 Hashing + JWT + Bcrypt
-- **Testing**: Pytest (Async)
-
-## Status
-✅ Phase 1: PostgreSQL migration with UUID and compliance models  
-✅ Phase 2: Multi-agent reasoning pipeline  
-✅ Phase 3: Observability, tracing, and explainability  
-✅ Phase 4: Audit Defensibility (Freezing/Hashing) + Hybrid RAG (PgVector)
-
-**System is production-ready for audit and deployment.**
+## Misc
+- **Laws-as-Data**: Seed frameworks from `/compliance` JSONs.
+- **Audit Defensibility**: Reports are frozen with a cryptographic fingerprint.
+- **Health**: Nano-second tracing for every agent operation.
