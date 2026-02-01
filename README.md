@@ -56,7 +56,16 @@ graph TD
 | ![Ingestion](demo/ingestion.png) | ![Live Trace](demo/live_trace.png) | ![Baseline](demo/baseline.png) |
 | *Parsing hierarchy* | *4-agent execution trace* | *Final risk baseline* |
 
-## Setup
+## Dockerization
+Run the entire stack with a single command:
+1. **Prepare Env**: Ensure `.env` exists with your keys.
+2. **Build & Run**:
+   ```bash
+   docker-compose up --build
+   ```
+   *This starts the FastAPI backend and a PostgreSQL instance pre-configured with `pgvector`.*
+
+## Setup (Local)
 1. **Env**: `cp .env.example .env` (Add OpenAI keys + DB URL)
 2. **Install**: `pip install -r requirements.txt`
 3. **Run**: `uvicorn app.main:app --reload`
