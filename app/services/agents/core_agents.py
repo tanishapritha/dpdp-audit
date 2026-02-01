@@ -53,7 +53,8 @@ class PlannerAgent:
                     {"role": "user", "content": user_prompt}
                 ],
                 response_format={"type": "json_object"},
-                temperature=0.0
+                temperature=0.0,
+                max_tokens=1000
             )
             
             data = json.loads(response.choices[0].message.content)
@@ -126,7 +127,8 @@ class ReasonerAgent:
                     {"role": "user", "content": user_prompt}
                 ],
                 response_format={"type": "json_object"},
-                temperature=0.0
+                temperature=0.0,
+                max_tokens=1000
             )
             
             data = json.loads(response.choices[0].message.content)
@@ -195,7 +197,8 @@ class VerifierAgent:
                     {"role": "user", "content": user_prompt}
                 ],
                 response_format={"type": "json_object"},
-                temperature=0.0
+                temperature=0.0,
+                max_tokens=1000
             )
             
             data = json.loads(response.choices[0].message.content)

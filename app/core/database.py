@@ -8,6 +8,14 @@ SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 
 Base = declarative_base()
 
+# Enable Vector extension on startup
+from sqlalchemy import text
+from sqlalchemy import event
+
+@event.listens_for(Base.metadata, "before_create")
+def create_vector_extension(target, connection, **kw):
+    connection.execute(text("CREATE EXTENSION IF NOT EXISTS vector"))
+
 def get_db():
     db = SessionLocal()
     try:

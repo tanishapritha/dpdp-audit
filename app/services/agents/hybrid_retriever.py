@@ -51,11 +51,20 @@ class HybridRetriever:
         
         if is_sqlite:
             # Fallback for Testing/SQLite environment
-            keyword = f"%{query[:15]}%"
+            # Instead of a strict ILIKE on the whole query, we find the most meaningful words
+            keywords = [w for w in query.split() if len(w) > 4][:3] 
+            search_query = " OR ".join([f"text LIKE '%{k}%'" for k in keywords]) if keywords else "1=1"
+            
+            # We also include a 'Wide Net' search: if it's a small policy, just get more chunks
             results = self.db.query(DocumentChunk).filter(
-                DocumentChunk.audit_id == audit_id,
-                DocumentChunk.text.ilike(keyword)
-            ).limit(max_chunks).all()
+                DocumentChunk.audit_id == audit_id
+            ).filter(sql_text(search_query)).limit(max_chunks * 2).all()
+            
+            # FALLBACK: If hybrid keywords failed, just get the most important headers
+            if not results:
+                results = self.db.query(DocumentChunk).filter(
+                    DocumentChunk.audit_id == audit_id
+                ).limit(max_chunks).all()
             
             document_chunks = []
             chunk_metadata = []
