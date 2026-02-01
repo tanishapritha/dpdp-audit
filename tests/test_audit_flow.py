@@ -75,7 +75,7 @@ def test_report_structure_in_agent_mode(client: TestClient, db, user_token_heade
             "fingerprint": "mock_hash",
             "timestamp": datetime.utcnow().isoformat(),
             "results": {
-                "verdict": "GREEN",
+                "overall_verdict": "GREEN",
                 "requirements": []
             }
         }
