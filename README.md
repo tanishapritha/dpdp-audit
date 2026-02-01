@@ -13,6 +13,24 @@ A 4-agent RAG pipeline that audits documents against regulatory frameworks with 
 - **Agentic Reasoning**: Planner, Retriever, Reasoner, and a Safety Verifier.
 - **Immutable Proof**: SHA-256 hashes for every evidence snippet.
 
+## Workflow
+```mermaid
+graph TD
+    A[PDF Upload] --> B{Layout Parser}
+    B --> C[PgVector Index]
+    C --> D[Planner Agent]
+    D --> E[Retriever Agent]
+    E --> F[Reasoner Agent]
+    F --> G[Verifier Agent]
+    G --> H[Immutable Report]
+```
+
+### Agentic Pipeline
+- **Planner**: Maps regulatory requirements to the specific document context.
+- **Retriever**: Executes hybrid searches to pull exact evidence snippets.
+- **Reasoner**: Analyzes findings against laws and assigns risk scores.
+- **Verifier**: Acts as a safety gate to prevent hallucinations and verify citations.
+
 ## Tech Stack
 - **Backend**: FastAPI + SQLAlchemy 2.0
 - **Database**: PostgreSQL (PgVector)
