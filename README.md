@@ -16,13 +16,26 @@ A 4-agent RAG pipeline that audits documents against regulatory frameworks with 
 ## Workflow
 ```mermaid
 graph TD
-    A[PDF Upload] --> B{Layout Parser}
-    B --> C[PgVector Index]
-    C --> D[Planner Agent]
-    D --> E[Retriever Agent]
-    E --> F[Reasoner Agent]
-    F --> G[Verifier Agent]
-    G --> H[Immutable Report]
+    subgraph Ingestion [Data Ingestion]
+        A[PDF Policy] --> B[Layout Parser]
+        B --> C[Hierarchical Chunking]
+        C --> D[(PgVector Index)]
+    end
+
+    subgraph Agents [Agentic Audit Pipeline]
+        D --> E[Planner Agent]
+        E --> F[Hybrid Retriever]
+        F --> G[Reasoner Agent]
+        G --> H{Safety Verifier}
+        H -- Recalibrate --> F
+        H -- Verified --> I[Cryptographic Hashing]
+    end
+
+    I --> J[Final Audit Report]
+    J --> K[Immutable Snapshot]
+
+    style Ingestion fill:#f9f9f9,stroke:#333,stroke-width:2px
+    style Agents fill:#fff,stroke:#007bff,stroke-width:2px
 ```
 
 ### Agentic Pipeline
