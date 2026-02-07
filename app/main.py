@@ -13,10 +13,15 @@ app = FastAPI(
     openapi_url=f"{settings.API_V1_STR}/openapi.json"
 )
 
-# Set all CORS enabled origins
+# Set CORS for frontend access
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"], # For MVP we allow all, should be restricted in production
+    allow_origins=[
+        "https://company-legal-audit.vercel.app",  # Production frontend
+        "http://13.48.30.236", # Direct EC2 Access
+        "http://localhost:3000",  # Local development
+        "http://localhost:8000",  # Local backend testing
+    ],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
