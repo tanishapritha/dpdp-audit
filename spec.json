@@ -3,7 +3,231 @@
     "name": "audit",
     "repo_url": "tanishapritha/dpdp-audit"
   },
-  "database": [],
-  "endpoints": [],
-  "prompts": []
+  "features": [],
+  "database": [
+    {
+      "table": "PolicyAudit",
+      "fields": [
+        {
+          "name": "id",
+          "type": "uuid"
+        },
+        {
+          "name": "filename",
+          "type": "string"
+        },
+        {
+          "name": "status",
+          "type": "string"
+        },
+        {
+          "name": "progress",
+          "type": "float"
+        },
+        {
+          "name": "owner_id",
+          "type": "uuid"
+        },
+        {
+          "name": "created_at",
+          "type": "datetime"
+        },
+        {
+          "name": "report",
+          "type": "json"
+        }
+      ]
+    },
+    {
+      "table": "ComplianceFramework",
+      "fields": [
+        {
+          "name": "id",
+          "type": "uuid"
+        },
+        {
+          "name": "name",
+          "type": "text"
+        },
+        {
+          "name": "version",
+          "type": "text"
+        },
+        {
+          "name": "effective_date",
+          "type": "string"
+        },
+        {
+          "name": "description",
+          "type": "text"
+        },
+        {
+          "name": "created_at",
+          "type": "datetime"
+        }
+      ]
+    },
+    {
+      "table": "ComplianceRequirement",
+      "fields": [
+        {
+          "name": "id",
+          "type": "uuid"
+        },
+        {
+          "name": "framework_id",
+          "type": "uuid"
+        },
+        {
+          "name": "requirement_id",
+          "type": "string"
+        },
+        {
+          "name": "section_ref",
+          "type": "text"
+        },
+        {
+          "name": "title",
+          "type": "text"
+        },
+        {
+          "name": "requirement_text",
+          "type": "text"
+        },
+        {
+          "name": "risk_level",
+          "type": "enum"
+        },
+        {
+          "name": "created_at",
+          "type": "datetime"
+        }
+      ]
+    },
+    {
+      "table": "ComplianceAssessment",
+      "fields": [
+        {
+          "name": "id",
+          "type": "uuid"
+        },
+        {
+          "name": "company_id",
+          "type": "uuid"
+        },
+        {
+          "name": "requirement_id",
+          "type": "string"
+        },
+        {
+          "name": "status",
+          "type": "enum"
+        },
+        {
+          "name": "confidence",
+          "type": "float"
+        },
+        {
+          "name": "assessed_at",
+          "type": "datetime"
+        }
+      ]
+    },
+    {
+      "table": "DocumentChunk",
+      "fields": [
+        {
+          "name": "id",
+          "type": "uuid"
+        },
+        {
+          "name": "audit_id",
+          "type": "uuid"
+        },
+        {
+          "name": "chunk_index",
+          "type": "integer"
+        },
+        {
+          "name": "text",
+          "type": "text"
+        },
+        {
+          "name": "section_context",
+          "type": "text"
+        },
+        {
+          "name": "page_number",
+          "type": "integer"
+        },
+        {
+          "name": "chunk_metadata",
+          "type": "json"
+        },
+        {
+          "name": "embedding",
+          "type": "string"
+        }
+      ]
+    },
+    {
+      "table": "User",
+      "fields": [
+        {
+          "name": "id",
+          "type": "uuid"
+        },
+        {
+          "name": "email",
+          "type": "string"
+        },
+        {
+          "name": "hashed_password",
+          "type": "string"
+        },
+        {
+          "name": "role",
+          "type": "string"
+        }
+      ]
+    }
+  ],
+  "endpoints": [
+    {
+      "method": "POST",
+      "route": "/users/login/access-token"
+    },
+    {
+      "method": "GET",
+      "route": "/users/me"
+    },
+    {
+      "method": "GET",
+      "route": "/frameworks/"
+    },
+    {
+      "method": "GET",
+      "route": "/{policy_id}/report"
+    },
+    {
+      "method": "GET",
+      "route": "/{policy_id}/pdf"
+    },
+    {
+      "method": "GET",
+      "route": "/{policy_id}/status"
+    },
+    {
+      "method": "POST",
+      "route": "/upload"
+    },
+    {
+      "method": "POST",
+      "route": "/"
+    },
+    {
+      "method": "GET",
+      "route": "/"
+    }
+  ]
 }
